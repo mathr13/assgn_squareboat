@@ -62,7 +62,13 @@ class _NotesHomeAppState extends State<NotesHomeApp> {
         centerTitle: false,
       ),
       body: Column(
-        children: [
+        children: 
+        // [
+        //   Spacer(),
+        //   const NoResultFound(),
+        //   Spacer(),
+        // ]
+        [
           const SBSearchBar(),
           const TitleLayer().wrapWidgetWithPadding(SBPaddings.verticalPadding1),
           Expanded(
