@@ -44,4 +44,6 @@ abstract class SBPaddings {
   static const EdgeInsets rightPadding4 = EdgeInsets.only(right: 8);
   static const EdgeInsets rightPadding5 = EdgeInsets.only(right: 2);
 
+  static const EdgeInsets btnpadding = EdgeInsets.symmetric(horizontal: 60, vertical: 16);
+
 }

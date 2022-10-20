@@ -1,0 +1,3 @@
+enum SelectionType {
+  oneToOne, oneToMany
+}
