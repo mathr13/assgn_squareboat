@@ -1,4 +1,5 @@
 import 'package:assgn_news_squareboat/models/option.dart';
+import 'package:assgn_news_squareboat/screens/news_home/no_result_found.dart';
 import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
 
@@ -87,21 +88,30 @@ class _NotesHomeAppState extends State<NotesHomeApp> {
         centerTitle: false,
       ),
       body: Column(
-        children: 
-        // [
-        //   Spacer(),
-        //   const NoResultFound(),
-        //   Spacer(),
-        // ]
+        children:
         [
-          const SBSearchBar(),
-          const TitleLayer().wrapWidgetWithPadding(SBPaddings.verticalPadding1),
-          Expanded(
-            child: ListView(
-              children: [1,2,3,4,5].map((e) => const ArticleCard()).toList(),
-            )
+          const Spacer(),
+          ErrorStateWidget(
+            errorLabel: "No internet connection!",
+            assetAddress: "assets/images/internet_connection_error.png",
+            actionButton: SBActionButton(
+              buttonLabel: "Try again",
+              onPressed: () {
+                print("try again pressed");
+              },
+            ),
           ),
-        ],
+          const Spacer(),
+        ]
+        // [
+        //   const SBSearchBar(),
+        //   const TitleLayer().wrapWidgetWithPadding(SBPaddings.verticalPadding1),
+        //   Expanded(
+        //     child: ListView(
+        //       children: [1,2,3,4,5].map((e) => const ArticleCard()).toList(),
+        //     )
+        //   ),
+        // ],
       ).wrapWidgetWithPadding(SBPaddings.padding1),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
