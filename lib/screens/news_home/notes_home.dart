@@ -2,7 +2,7 @@ import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/constant_values.dart';
-import 'news_card.dart';
+import 'article_card.dart';
 import 'search_bar.dart';
 import 'title_layer.dart';
 
@@ -67,7 +67,7 @@ class _NotesHomeAppState extends State<NotesHomeApp> {
           const TitleLayer().wrapWidgetWithPadding(SBPaddings.verticalPadding1),
           Expanded(
             child: ListView(
-              children: [1,2,3,4,5].map((e) => const NewsCard()).toList(),
+              children: [1,2,3,4,5].map((e) => const ArticleCard()).toList(),
             )
           ),
         ],

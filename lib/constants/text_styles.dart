@@ -58,7 +58,6 @@ abstract class SBTextStyles {
   static const content2 = TextStyle(
     fontSize: 16,
     color: SBColours.primaryBckgDark,
-    // fontWeight: FontWeight.w500
   );
   static const content3 = TextStyle(
     fontSize: 14,
