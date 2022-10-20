@@ -8,16 +8,16 @@ import 'article_card.dart';
 import 'search_bar.dart';
 import 'title_layer.dart';
 
-class NotesHomeApp extends StatefulWidget {
-  const NotesHomeApp({super.key});
+class NewsHomeApp extends StatefulWidget {
+  const NewsHomeApp({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _NotesHomeAppState();
+    return _NewsHomeAppState();
   }
 }
 
-class _NotesHomeAppState extends State<NotesHomeApp> {
+class _NewsHomeAppState extends State<NewsHomeApp> {
 
   List<Option> options = [
     Option(title: "Source 1", isSelected: false),
