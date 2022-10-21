@@ -1,4 +1,4 @@
-import 'package:assgn_news_squareboat/models/option.dart';
+import 'package:assgn_news_squareboat/controllers/news_controller.dart';
 import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
 
@@ -19,14 +19,14 @@ class NewsHomeApp extends StatefulWidget {
 
 class _NewsHomeAppState extends State<NewsHomeApp> {
 
-  List<Option> options = [
-    Option(title: "Source 1", isSelected: false),
-    Option(title: "Source 2", isSelected: false),
-    Option(title: "Source 3", isSelected: true),
-    Option(title: "Source 4", isSelected: false),
-    Option(title: "Source 5", isSelected: true),
-    Option(title: "Source 6", isSelected: false),
-  ];
+  final NewsController _newsController = NewsController();
+
+  @override
+  void initState() {
+    _newsController.populateSourcesList();
+    _newsController.populateLocationsList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +76,8 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                     borderRadius: SBRadiuses.borderRadius3,
                   ),
                   builder: (context) => SBModalSheet(
-                    sheetTitle: "Filter by sources",
-                    options: options,
+                    sheetTitle: "Choose your location",
+                    optionsTally: _newsController.locationsTally,
                     selectionType: SelectionType.oneToOne,
                   ),
                 );
@@ -121,8 +121,8 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
               borderRadius: SBRadiuses.borderRadius3,
             ),
             builder: (context) => SBModalSheet(
-              sheetTitle: "Choose your location",
-              options: options,
+              sheetTitle: "Filter by sources",
+              optionsTally: _newsController.sourcesTally,
               selectionType: SelectionType.oneToMany,
             ),
           );

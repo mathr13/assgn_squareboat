@@ -1,21 +1,33 @@
 
-
 import 'package:flutter/material.dart';
-
-import '../../models/option.dart';
+import '../../controllers/modal_sheet_controller.dart';
 import '../../utilities/utility_values.dart';
 import '../constant_values.dart';
 import 'sbaction_button.dart';
 import 'sbcheckbox.dart';
 import 'sbradio.dart';
 
-class SBModalSheet extends StatelessWidget {
+class SBModalSheet extends StatefulWidget {
 
   final String sheetTitle;
   final SelectionType selectionType;
-  final List<Option> options;
+  final Map<String, bool> optionsTally;
 
-  const SBModalSheet({super.key, required this.sheetTitle, required this.selectionType, required this.options});
+  const SBModalSheet({super.key, required this.sheetTitle, required this.selectionType, required this.optionsTally});
+
+  @override
+  State<StatefulWidget> createState() => _SBModalSheetState();
+}
+
+class _SBModalSheetState extends State<SBModalSheet> {
+
+  final SBModalSheetController _sheetController = SBModalSheetController();
+
+  @override
+  void initState() {
+    _sheetController.populateOptions(widget.optionsTally);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +45,7 @@ class SBModalSheet extends StatelessWidget {
           Row(
             children: [
               Text(
-                sheetTitle,
+                widget.sheetTitle,
                 style: const TextStyle(
                   fontSize: 20,
                   color: Color(0xff5A6580),
@@ -45,23 +57,37 @@ class SBModalSheet extends StatelessWidget {
           const Divider(
             color: Color(0xff5A6580),
           ).wrapWidgetWithPadding(SBPaddings.horizontalPadding1).wrapWidgetWithPadding(SBPaddings.bottomPadding3),
-          Expanded(
-            child: ListView(
-              children: options.map(
-                (option) => selectionType == SelectionType.oneToMany 
-                  ? SBCheckboxOption(optionTitle: option.title, isSelected: option.isSelected)
-                  : SBRadioOption(optionTitle: option.title, isSelected: option.isSelected)
-              ).toList(),
-            ),
+          StatefulBuilder(
+            builder: (context, updateModalSheetState) {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: _sheetController.getOptions.length,
+                  itemBuilder: (context, index) {
+                    return widget.selectionType == SelectionType.oneToMany
+                    ? SBCheckboxOption(
+                        optionTitle: _sheetController.getOptions[index],
+                        isSelected: _sheetController.getOptionsStatus[index]
+                      ).wrapWidgetWithTapGesture(
+                      onPressed: () => updateModalSheetState(() => _sheetController.triggerSelectionWith(index, widget.selectionType)),
+                    )
+                    : SBRadioOption(
+                        optionTitle: _sheetController.getOptions[index],
+                        isSelected: _sheetController.getOptionsStatus[index]
+                    ).wrapWidgetWithTapGesture(
+                      onPressed: () => updateModalSheetState(() => _sheetController.triggerSelectionWith(index, widget.selectionType)),
+                    );
+                  },
+                ),
+              );
+            }
           ),
           SBActionButton(
             buttonLabel: "Apply",
-            onPressed: () {
-              print("apply cab pressed");
-            },
+            onPressed: () => _sheetController.applyFilter(widget.optionsTally),
           ).wrapWidgetWithPadding(SBPaddings.topPadding2),
         ]
       ),
     );
   }
+
 }
