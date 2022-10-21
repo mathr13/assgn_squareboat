@@ -20,7 +20,7 @@ class NewsHomeApp extends StatefulWidget {
 
 class _NewsHomeAppState extends State<NewsHomeApp> {
 
-  final NewsController _newsController = NewsController();
+  final NewsController _newsController = Get.find<NewsController>();
 
   @override
   void initState() {
