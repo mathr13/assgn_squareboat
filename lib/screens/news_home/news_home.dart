@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../constants/constant_values.dart';
 import '../../constants/widgets/sbaction_button.dart';
 import '../../constants/widgets/sbmodal_sheet.dart';
+import '../../navigation/navigation_values.dart';
 import 'article_card.dart';
 import 'no_result_found.dart';
 import 'search_bar.dart';
@@ -143,7 +144,11 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
             ),
             Expanded(
               child: ListView(
-                children: _newsController.newsArticlesList.map((article) => ArticleCard(article: article,)).toList(),
+                children: _newsController.newsArticlesList.map(
+                  (article) => ArticleCard(article: article,).wrapWidgetWithTapGesture(
+                    onPressed: () => Get.toNamed(Routes.articleDetails),
+                  )
+                ).toList(),
               )
             ),
           ],

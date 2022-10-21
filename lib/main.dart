@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'injector.dart';
+import 'navigation/navigation_values.dart';
 import 'screens/news_home/news_home.dart';
 
 void main() async {
@@ -16,9 +17,10 @@ class SBANewsApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: NewsHomeApp(),
+      home: const NewsHomeApp(),
+      getPages: AppPages.pages,
       // home: NewsDetail(),
     );
   }

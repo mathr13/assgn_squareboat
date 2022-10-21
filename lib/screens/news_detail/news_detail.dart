@@ -1,5 +1,6 @@
 import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../constants/constant_values.dart';
 import 'article_header_image.dart';
@@ -16,6 +17,8 @@ class NewsDetail extends StatelessWidget {
         backgroundColor: SBColours.primaryBckgLight,
         leading: const Icon(
           Icons.arrow_back_ios_new_outlined,
+        ).wrapWidgetWithTapGesture(
+          onPressed: () => Get.back(),
         ),
         elevation: 0,
       ),
