@@ -7,11 +7,11 @@ import 'screens/news_home/news_home.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await inject();
-  runApp(const SBANewspp());
+  runApp(const SBANewsApp());
 }
 
-class SBANewspp extends StatelessWidget {
-  const SBANewspp({super.key});
+class SBANewsApp extends StatelessWidget {
+  const SBANewsApp({super.key});
 
   
   @override

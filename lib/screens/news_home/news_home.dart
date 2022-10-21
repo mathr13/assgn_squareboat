@@ -25,6 +25,9 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
   @override
   void initState() {
     _newsController.fetchAllNewsArticlesWithConstraints();
+    _newsController.populateSourcesList();
+    _newsController.populateLocationsList();
+    _newsController.populateSortList();
     super.initState();
   }
 
@@ -45,6 +48,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                 style: SBTextStyles.titleLight1,
                 ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const Text(
                     "LOCATION",
@@ -80,6 +84,12 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                       sheetTitle: "Choose your location",
                       optionsTally: _newsController.locationsTally,
                       selectionType: SelectionType.oneToOne,
+                      optionalCompetionHandler: () {
+                        _newsController.locationsTally.forEach((key, value) {
+                          if(value) _newsController.selectedLocation.value = key;
+                        });
+                        _newsController.fetchAllNewsArticlesWithConstraints();
+                      },
                     ),
                   );
                 },

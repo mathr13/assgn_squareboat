@@ -28,16 +28,14 @@ class NewsController extends GetxController {
 
   Future<void> fetchAllNewsArticlesWithConstraints({String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? location, String? category, String? sources, String? domains}) async {
     showProgressBar();
-    populateSourcesList();
-    populateLocationsList();
-    populateSortList();
-    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines();
-    response.fold(
-      (l) => print(l),
-      (r) {
-        newsArticlesList.value = r.articles ?? [];
-      }
-    );
+    await Future.delayed(const Duration(seconds: 2));
+    // Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines();
+    // response.fold(
+    //   (l) => print(l),
+    //   (r) {
+    //     newsArticlesList.value = r.articles ?? [];
+    //   }
+    // );
     hideProgressBar();
   }
   
@@ -51,7 +49,7 @@ class NewsController extends GetxController {
   }
 
   populateLocationsList() {
-    _locationsOptionsTally.putIfAbsent("India", () => false);
+    _locationsOptionsTally.putIfAbsent("India", () => true);
     _locationsOptionsTally.putIfAbsent("Australia", () => false);
     _locationsOptionsTally.putIfAbsent("USA", () => false);
     _locationsOptionsTally.putIfAbsent("Israel", () => false);
@@ -62,7 +60,7 @@ class NewsController extends GetxController {
   }
 
   populateSortList() {
-    _sortOptionsTally.putIfAbsent("relevancy", () => false);
+    _sortOptionsTally.putIfAbsent("relevancy", () => true);
     _sortOptionsTally.putIfAbsent("popularity", () => false);
     _sortOptionsTally.putIfAbsent("publishedAt", () => false);
     selectedSortingAttribute.value = "relevancy";
