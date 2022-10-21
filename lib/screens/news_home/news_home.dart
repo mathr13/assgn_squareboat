@@ -105,7 +105,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
           //   const Spacer(),
           // ]
           [
-            const SBSearchBar(),
+            SBSearchBar(),
             const TitleLayer().wrapWidgetWithPadding(SBPaddings.verticalPadding1),
             Expanded(
               child: ListView(
