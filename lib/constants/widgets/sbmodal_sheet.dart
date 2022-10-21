@@ -12,7 +12,7 @@ class SBModalSheet extends StatefulWidget {
   final String sheetTitle;
   final SelectionType selectionType;
   final Map<String, bool> optionsTally;
-  final Function()? optionalCompetionHandler;
+  final Function(List<String>)? optionalCompetionHandler;
 
   const SBModalSheet({super.key, required this.sheetTitle, required this.selectionType, required this.optionsTally, this.optionalCompetionHandler});
 

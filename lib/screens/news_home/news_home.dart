@@ -24,10 +24,10 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
 
   @override
   void initState() {
-    _newsController.fetchAllNewsArticlesWithConstraints();
-    _newsController.populateSourcesList();
     _newsController.populateLocationsList();
     _newsController.populateSortList();
+    _newsController.populateSourcesList(_newsController.selectedLocation.value);
+    _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value);
     super.initState();
   }
 
@@ -84,11 +84,11 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                       sheetTitle: "Choose your location",
                       optionsTally: _newsController.locationsTally,
                       selectionType: SelectionType.oneToOne,
-                      optionalCompetionHandler: () {
+                      optionalCompetionHandler: (selectedValues) {
                         _newsController.locationsTally.forEach((key, value) {
                           if(value) _newsController.selectedLocation.value = key;
                         });
-                        _newsController.fetchAllNewsArticlesWithConstraints();
+                        _newsController.fetchAllNewsArticlesWithConstraints(selectedValues.first);
                       },
                     ),
                   );
@@ -129,10 +129,11 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                     sheetTitle: "Sort by",
                     optionsTally: _newsController.sortTally,
                     selectionType: SelectionType.oneToOne,
-                    optionalCompetionHandler: () {
+                    optionalCompetionHandler: (selectedValues) {
                       _newsController.sortTally.forEach((key, value) {
                         if(value) _newsController.selectedSortingAttribute.value = key;
                       });
+                      _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value, sortBy: selectedValues.first);
                     },
                   ),
                 );
@@ -140,7 +141,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
             ),
             Expanded(
               child: ListView(
-                children: _newsController.newsArticlesList.map((e) => const ArticleCard()).toList(),
+                children: _newsController.newsArticlesList.map((article) => ArticleCard(article: article,)).toList(),
               )
             ),
           ],
@@ -156,6 +157,9 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                 sheetTitle: "Filter by sources",
                 optionsTally: _newsController.sourcesTally,
                 selectionType: SelectionType.oneToMany,
+                optionalCompetionHandler: (selectedValues) {
+                  _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value, sources: selectedValues);
+                },
               ),
             );
           },

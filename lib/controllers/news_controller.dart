@@ -1,4 +1,5 @@
 import 'package:assgn_news_squareboat/models/news_response.dart';
+import 'package:assgn_news_squareboat/models/source_response.dart';
 import 'package:assgn_news_squareboat/repositories/news_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
@@ -26,37 +27,51 @@ class NewsController extends GetxController {
   var selectedSortingAttribute = "".obs;
   var selectedLocation = "".obs;
 
-  Future<void> fetchAllNewsArticlesWithConstraints({String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? location, String? category, String? sources, String? domains}) async {
+  Future<void> fetchAllNewsArticlesWithConstraints(String location, {String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
     showProgressBar();
-    await Future.delayed(const Duration(seconds: 2));
-    // Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines();
-    // response.fold(
-    //   (l) => print(l),
-    //   (r) {
-    //     newsArticlesList.value = r.articles ?? [];
-    //   }
-    // );
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(location, sources: sources, sortBy: sortBy);
+    response.fold(
+      (l) {
+        print(l.message);
+        newsArticlesList.value = [];
+      },
+      (r) {
+        newsArticlesList.value = r.articles ?? [];
+        populateSourcesList(location);
+      }
+    );
     hideProgressBar();
   }
   
-  populateSourcesList() {
-    _sourcesOptionsTally.putIfAbsent("VentureBeat", () => false);
-    _sourcesOptionsTally.putIfAbsent("Hackaday", () => false);
-    _sourcesOptionsTally.putIfAbsent("Entrepreneur", () => false);
-    _sourcesOptionsTally.putIfAbsent("ReadWrite", () => false);
-    _sourcesOptionsTally.putIfAbsent("Moz.com", () => false);
-    _sourcesOptionsTally.putIfAbsent("Search Engine Journal", () => false);
+  populateSourcesList(String location) async {
+    Either<Failure, SourcesResponse> response = await getIt.get<NewsRepository>().getAllSourcesForRegion(location);
+    response.fold(
+      (l) {
+        print(l.message);
+        _sourcesOptionsTally.clear();
+      },
+      (r) {
+        _sourcesOptionsTally.clear();
+        r.sources?.forEach((source) => _sourcesOptionsTally.putIfAbsent(source.name ?? "", () => false));
+      }
+    );
   }
 
   populateLocationsList() {
-    _locationsOptionsTally.putIfAbsent("India", () => true);
-    _locationsOptionsTally.putIfAbsent("Australia", () => false);
-    _locationsOptionsTally.putIfAbsent("USA", () => false);
-    _locationsOptionsTally.putIfAbsent("Israel", () => false);
-    _locationsOptionsTally.putIfAbsent("Germany", () => false);
-    _locationsOptionsTally.putIfAbsent("Mexico", () => false);
-    _locationsOptionsTally.putIfAbsent("Italy", () => false);
-    selectedLocation.value = "India";
+    _locationsOptionsTally.putIfAbsent("ar", () => false);
+    _locationsOptionsTally.putIfAbsent("au", () => false);
+    _locationsOptionsTally.putIfAbsent("br", () => false);
+    _locationsOptionsTally.putIfAbsent("ca", () => false);
+    _locationsOptionsTally.putIfAbsent("cn", () => false);
+    _locationsOptionsTally.putIfAbsent("co", () => false);
+    _locationsOptionsTally.putIfAbsent("de", () => false);
+    _locationsOptionsTally.putIfAbsent("fr", () => false);
+    _locationsOptionsTally.putIfAbsent("gb", () => false);
+    _locationsOptionsTally.putIfAbsent("hk", () => false);
+    _locationsOptionsTally.putIfAbsent("in", () => true);
+    _locationsOptionsTally.putIfAbsent("id", () => false);
+    _locationsOptionsTally.putIfAbsent("us", () => false);
+    selectedLocation.value = "in";
   }
 
   populateSortList() {
