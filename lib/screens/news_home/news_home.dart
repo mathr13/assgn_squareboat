@@ -29,7 +29,6 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
   void initState() {
     _newsController.populateLocationsList();
     _newsController.populateSortList();
-    _newsController.populateSourcesList(_newsController.selectedLocation.value);
     _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value);
     super.initState();
   }
@@ -118,7 +117,9 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
               Spacer(),
             ]
           : [
-            const SBSearchBar(),
+            const SBSearchBar(enabled: false,).wrapWidgetWithTapGesture(
+              onPressed: () => Get.toNamed(Routes.searchScreen),
+            ),
             TitleLayer(
               sortingAttribute: _newsController.selectedSortingAttribute.value,
             ).wrapWidgetWithPadding(SBPaddings.verticalPadding1).wrapWidgetWithTapGesture(
@@ -192,29 +193,4 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
       ).withProgressIndicator(_newsController.showProgressIndicator.value),
     );
   }
-}
-
-
-abstract class SBSnackbars {
-
-  static void errorSnackbar(String title, String message) {
-    Get.snackbar(
-      title, 
-      message, 
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM
-    );
-  }
-
-  static void successSnackbar(String title, String message) {
-    Get.snackbar(
-      title, 
-      message, 
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM
-    );
-  }
-
 }

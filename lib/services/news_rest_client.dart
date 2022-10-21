@@ -43,4 +43,22 @@ class NewsRestClient {
     return value == null ? "" : "$key=$value&";
   }
 
+  Future<NewsResponse> fetchEverything(String apiKey, {required String query, List<String>? sources, String? country, String? from, String? to, String? sortBy, String? pageSize, String? page}) async {
+    String url = "https://newsapi.org/v2/everything?language=en&searchIn=title&apiKey=$apiKey&";
+    url += getUrlQueryForAttribute("q", query);
+    sources?.forEach((source) {
+      url += getUrlQueryForAttribute("sources", source);
+      url += ",";
+    });
+    if(url.endsWith(",")) url = url.substring(0, url.length-1);
+    url += getUrlQueryForAttribute("country", country);
+    url += getUrlQueryForAttribute("sortBy", sortBy);
+    url += getUrlQueryForAttribute("pageSize", pageSize);
+    url += getUrlQueryForAttribute("page", page);
+    url = url.substring(0, url.length-1);
+    print(url);
+    var response = await dio.get(url);
+    return NewsResponse.fromJson(response.data);
+  }
+
 }

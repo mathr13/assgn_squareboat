@@ -1,10 +1,10 @@
 import 'package:assgn_news_squareboat/models/news_response.dart';
 import 'package:assgn_news_squareboat/models/source_response.dart';
 import 'package:assgn_news_squareboat/repositories/news_repository.dart';
-import 'package:assgn_news_squareboat/screens/news_home/news_home.dart';
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 
+import '../constants/widgets/sbsnackbar.dart';
 import '../injector.dart';
 import '../models/article.dart';
 import '../services/failure_helper.dart';
@@ -20,7 +20,9 @@ class NewsController extends GetxController {
 
   final Map<String, bool> _sortOptionsTally = {};
   Map<String, bool> get sortTally => _sortOptionsTally;
+  
   var newsArticlesList = <Article>[].obs;
+  var filteredNewsArticlesList = <Article>[].obs;
 
   var showProgressIndicator = true.obs;
   showProgressBar() => showProgressIndicator.value = true;
@@ -34,7 +36,6 @@ class NewsController extends GetxController {
     Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(location, sources: sources, sortBy: sortBy);
     response.fold(
       (l) {
-        print(l.message);
         newsArticlesList.value = [];
         SBSnackbars.errorSnackbar("Error", l.message);
       },
@@ -82,6 +83,42 @@ class NewsController extends GetxController {
     _sortOptionsTally.putIfAbsent("popularity", () => false);
     _sortOptionsTally.putIfAbsent("publishedAt", () => false);
     selectedSortingAttribute.value = "relevancy";
+  }
+
+}
+
+extension SearchNews on NewsController {
+  
+  bool checkValidityOfQuery(String searchQuery) {
+    if(searchQuery.length < 3) return false;
+    return true;
+  }
+
+  initialiseSearch() {
+    filteredNewsArticlesList.value = [];
+  }
+
+  searchForQuery(String searchQuery) {
+    if(checkValidityOfQuery(searchQuery)) {
+      fetchEverythingWithQueryConstraint(searchQuery: searchQuery);
+    }else {
+      initialiseSearch();
+    }
+  }
+
+  Future<void> fetchEverythingWithQueryConstraint({required String searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
+    showProgressBar();
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getEverythingFor(selectedLocation.value, query: searchQuery, sources: sources, sortBy: sortBy);
+    response.fold(
+      (l) {
+        filteredNewsArticlesList.value = [];
+        SBSnackbars.errorSnackbar("Error", l.message);
+      },
+      (r) {
+        filteredNewsArticlesList.value = r.articles ?? [];
+      }
+    );
+    hideProgressBar();
   }
 
 }

@@ -9,6 +9,7 @@ abstract class NewsRepository {
 
   Future<Either<Failure, NewsResponse>> getTopHeadlines(String country, {String? query, List<String>? sources, String? category, String? sortBy, String? pageSize, String? page});
   Future<Either<Failure, SourcesResponse>> getAllSourcesForRegion(String country);
+  Future<Either<Failure, NewsResponse>> getEverythingFor(String country, {required String query, List<String>? sources, String? from, String? to, String? sortBy, String? pageSize, String? page});
 
 }
 
@@ -24,7 +25,7 @@ class NewsRepositoryImpl implements NewsRepository {
       // var response = await client.getHeadlines(
       //   "9f9b059b05b8442da7318d9e3ffbb2a0"
       // );
-      var response = await client.fetchHeadlines("9f9b059b05b8442da7318d9e3ffbb2a0", sources: sources, country: country, sortBy: sortBy);
+      var response = await client.fetchHeadlines("b81c5ee253e7470cad419f756a90acb7", sources: sources, country: country, sortBy: sortBy);
       return Right(response);
     } catch (e) {
       return Left(Failure.fromServerError(e));
@@ -34,7 +35,17 @@ class NewsRepositoryImpl implements NewsRepository {
   @override
   Future<Either<Failure, SourcesResponse>> getAllSourcesForRegion(String country) async {
     try {
-      var response = await client.fetchSourcesForLocation("9f9b059b05b8442da7318d9e3ffbb2a0", country);
+      var response = await client.fetchSourcesForLocation("b81c5ee253e7470cad419f756a90acb7", country);
+      return Right(response);
+    } catch (e) {
+      return Left(Failure.fromServerError(e));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, NewsResponse>> getEverythingFor(String country, {required String query, List<String>? sources, String? from, String? to, String? sortBy, String? pageSize, String? page}) async {
+    try {
+      var response = await client.fetchEverything("b81c5ee253e7470cad419f756a90acb7", query: query);
       return Right(response);
     } catch (e) {
       return Left(Failure.fromServerError(e));
