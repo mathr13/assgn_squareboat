@@ -8,6 +8,18 @@ class NewsController extends GetxController {
   final Map<String, bool> _locationsOptionsTally = {};
   Map<String, bool> get locationsTally => _locationsOptionsTally;
 
+  var showProgressIndicator = true.obs;
+  showProgressBar() => showProgressIndicator.value = true;
+  hideProgressBar() => showProgressIndicator.value = false;
+
+  Future<void> fetchAllNewsArticlesWithConstraints({String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? location, String? category, String? sources, String? domains}) async {
+    showProgressBar();
+    populateSourcesList();
+    populateLocationsList();
+    await Future.delayed(const Duration(seconds: 3));
+    hideProgressBar();
+  }
+  
   populateSourcesList() {
     _sourcesOptionsTally.putIfAbsent("VentureBeat", () => false);
     _sourcesOptionsTally.putIfAbsent("Hackaday", () => false);
