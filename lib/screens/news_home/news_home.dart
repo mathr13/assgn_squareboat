@@ -109,7 +109,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
             const TitleLayer().wrapWidgetWithPadding(SBPaddings.verticalPadding1),
             Expanded(
               child: ListView(
-                children: [1,2,3,4,5].map((e) => const ArticleCard()).toList(),
+                children: _newsController.newsArticlesList.map((e) => const ArticleCard()).toList(),
               )
             ),
           ],

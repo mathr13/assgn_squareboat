@@ -19,9 +19,19 @@ class _NewsRestClient implements NewsRestClient {
   String? baseUrl;
 
   @override
-  Future<NewsResponse> getAllNews() async {
+  Future<NewsResponse> getHeadlines(
+    apiKey, {
+    query,
+    sources,
+    country,
+    category,
+    sortBy,
+    pageSize,
+    page,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio
@@ -32,7 +42,40 @@ class _NewsRestClient implements NewsRestClient {
     )
             .compose(
               _dio.options,
-              'https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=9f9b059b05b8442da7318d9e3ffbb2a0',
+              'https://newsapi.org/v2/top-headlines?language=en&q=${query}&sources=${sources}&sortBy=${sortBy}&pageSize=${pageSize}&page=${page}&apiKey=${apiKey}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = NewsResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<NewsResponse> getEverything(
+    apiKey, {
+    query,
+    sources,
+    fromDate,
+    toDate,
+    sortBy,
+    pageSize,
+    page,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<NewsResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'https://newsapi.org/v2/everything?language=en&q=${query}&searchIn=title&sources=${sources}&from=${fromDate}&to=${toDate}&sortBy=${sortBy}&pageSize=${pageSize}&page=${page}&apiKey=${apiKey}',
               queryParameters: queryParameters,
               data: _data,
             )
