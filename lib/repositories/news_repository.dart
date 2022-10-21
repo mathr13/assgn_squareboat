@@ -6,7 +6,7 @@ import '../services/news_rest_client.dart';
 
 abstract class NewsRepository {
 
-  Future<Either<Failure, NewsResponse>> getNewsAtricles();
+  Future<Either<Failure, NewsResponse>> getTopHeadlines();
 
 }
 
@@ -17,9 +17,11 @@ class NewsRepositoryImpl implements NewsRepository {
   NewsRepositoryImpl(this.client);
   
   @override
-  Future<Either<Failure, NewsResponse>> getNewsAtricles() async {
+  Future<Either<Failure, NewsResponse>> getTopHeadlines() async {
     try {
-      var response = await client.getAllNews();
+      var response = await client.getHeadlines(
+        "9f9b059b05b8442da7318d9e3ffbb2a0"
+      );
       return Right(response);
     } catch (e) {
       return Left(Failure.fromServerError(e));

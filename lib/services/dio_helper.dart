@@ -1,13 +1,14 @@
+import 'package:assgn_news_squareboat/services/news_rest_client.dart';
 import 'package:dio/dio.dart';
 
-class APIHelper {
+class DioHelper {
   late Dio dio;
-  APIHelper() {
+  DioHelper() {
     dio = Dio()
       ..options = BaseOptions(
         headers: {}
       );
   }
 
-  // ItemRestClient getDioItemClient() => ItemRestClient(dio);
+  NewsRestClient getDioNewsClient() => NewsRestClient(dio);
 }

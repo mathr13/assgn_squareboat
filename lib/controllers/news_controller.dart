@@ -1,4 +1,11 @@
+import 'package:assgn_news_squareboat/models/news_response.dart';
+import 'package:assgn_news_squareboat/repositories/news_repository.dart';
+import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
+
+import '../injector.dart';
+import '../models/article.dart';
+import '../services/failure_helper.dart';
 
 class NewsController extends GetxController {
 
@@ -10,6 +17,7 @@ class NewsController extends GetxController {
 
   final Map<String, bool> _sortOptionsTally = {};
   Map<String, bool> get sortTally => _sortOptionsTally;
+  var newsArticlesList = <Article>[].obs;
 
   var showProgressIndicator = true.obs;
   showProgressBar() => showProgressIndicator.value = true;
@@ -23,7 +31,13 @@ class NewsController extends GetxController {
     populateSourcesList();
     populateLocationsList();
     populateSortList();
-    await Future.delayed(const Duration(seconds: 3));
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines();
+    response.fold(
+      (l) => print(l),
+      (r) {
+        newsArticlesList.value = r.articles ?? [];
+      }
+    );
     hideProgressBar();
   }
   
