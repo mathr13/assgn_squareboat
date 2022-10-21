@@ -165,19 +165,56 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                 optionsTally: _newsController.sourcesTally,
                 selectionType: SelectionType.oneToMany,
                 optionalCompetionHandler: (selectedValues) {
+                  _newsController.isSourceSelectionActive = selectedValues.isEmpty ? false : true;
                   _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value, sources: selectedValues);
                 },
               ),
             );
           },
           backgroundColor: SBColours.primaryBckgLight,
-          child: const Icon(
-            Icons.filter_alt_outlined,
-            size: 32,
-            color: Colors.white,
+          child: Stack(
+            children: [
+              const Icon(
+                Icons.filter_alt_outlined,
+                size: 32,
+                color: Colors.white,
+              ),
+              Positioned(
+                right: 0,
+                child: CircleAvatar(
+                  radius: _newsController.isSourceSelectionActive ? 4 : 0,
+                  backgroundColor: Colors.red,
+                ),
+              ),
+            ],
           ),
         ),
       ).withProgressIndicator(_newsController.showProgressIndicator.value),
     );
   }
+}
+
+
+abstract class SBSnackbars {
+
+  static void errorSnackbar(String title, String message) {
+    Get.snackbar(
+      title, 
+      message, 
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM
+    );
+  }
+
+  static void successSnackbar(String title, String message) {
+    Get.snackbar(
+      title, 
+      message, 
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM
+    );
+  }
+
 }

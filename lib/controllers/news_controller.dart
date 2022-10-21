@@ -1,6 +1,7 @@
 import 'package:assgn_news_squareboat/models/news_response.dart';
 import 'package:assgn_news_squareboat/models/source_response.dart';
 import 'package:assgn_news_squareboat/repositories/news_repository.dart';
+import 'package:assgn_news_squareboat/screens/news_home/news_home.dart';
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +13,7 @@ class NewsController extends GetxController {
 
   final Map<String, bool> _sourcesOptionsTally = {};
   Map<String, bool> get sourcesTally => _sourcesOptionsTally;
+  bool isSourceSelectionActive = false;
 
   final Map<String, bool> _locationsOptionsTally = {};
   Map<String, bool> get locationsTally => _locationsOptionsTally;
@@ -34,6 +36,7 @@ class NewsController extends GetxController {
       (l) {
         print(l.message);
         newsArticlesList.value = [];
+        SBSnackbars.errorSnackbar("Error", l.message);
       },
       (r) {
         newsArticlesList.value = r.articles ?? [];
@@ -47,8 +50,8 @@ class NewsController extends GetxController {
     Either<Failure, SourcesResponse> response = await getIt.get<NewsRepository>().getAllSourcesForRegion(location);
     response.fold(
       (l) {
-        print(l.message);
         _sourcesOptionsTally.clear();
+        SBSnackbars.errorSnackbar("Error", l.message);
       },
       (r) {
         _sourcesOptionsTally.clear();
