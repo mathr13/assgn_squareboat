@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../constants/constant_values.dart';
+import '../../constants/widgets/sbaction_button.dart';
 import '../../constants/widgets/sbmodal_sheet.dart';
 import 'article_card.dart';
+import 'no_result_found.dart';
 import 'search_bar.dart';
 import 'title_layer.dart';
 
@@ -99,22 +101,22 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
           centerTitle: false,
         ),
         body: Column(
-          children:
-          // [
-          //   const Spacer(),
-          //   ErrorStateWidget(
-          //     errorLabel: "No internet connection!",
-          //     assetAddress: "assets/images/internet_connection_error.png",
-          //     actionButton: SBActionButton(
-          //       buttonLabel: "Try again",
-          //       onPressed: () {
-          //         print("try again pressed");
-          //       },
-          //     ),
-          //   ),
-          //   const Spacer(),
-          // ]
-          [
+          children: _newsController.newsArticlesList.isEmpty
+          ? const [
+              Spacer(),
+              ErrorStateWidget(
+                errorLabel: "No Results!",
+                assetAddress: "assets/images/no_result_found.png",
+                // actionButton: SBActionButton(
+                //   buttonLabel: "Try again",
+                //   onPressed: () {
+                //     print("try again pressed");
+                //   },
+                // ),
+              ),
+              Spacer(),
+            ]
+          : [
             const SBSearchBar(),
             TitleLayer(
               sortingAttribute: _newsController.selectedSortingAttribute.value,
