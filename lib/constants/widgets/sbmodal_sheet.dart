@@ -12,8 +12,9 @@ class SBModalSheet extends StatefulWidget {
   final String sheetTitle;
   final SelectionType selectionType;
   final Map<String, bool> optionsTally;
+  final Function()? optionalCompetionHandler;
 
-  const SBModalSheet({super.key, required this.sheetTitle, required this.selectionType, required this.optionsTally});
+  const SBModalSheet({super.key, required this.sheetTitle, required this.selectionType, required this.optionsTally, this.optionalCompetionHandler});
 
   @override
   State<StatefulWidget> createState() => _SBModalSheetState();
@@ -83,7 +84,7 @@ class _SBModalSheetState extends State<SBModalSheet> {
           ),
           SBActionButton(
             buttonLabel: "Apply",
-            onPressed: () => _sheetController.applyFilter(widget.optionsTally),
+            onPressed: () => _sheetController.applyFilter(widget.optionsTally, optionalCompetionHandler: widget.optionalCompetionHandler),
           ).wrapWidgetWithPadding(SBPaddings.topPadding2),
         ]
       ),

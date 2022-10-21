@@ -15,14 +15,22 @@ class NewsController extends GetxController {
   final Map<String, bool> _locationsOptionsTally = {};
   Map<String, bool> get locationsTally => _locationsOptionsTally;
 
+  final Map<String, bool> _sortOptionsTally = {};
+  Map<String, bool> get sortTally => _sortOptionsTally;
   var newsArticlesList = <Article>[].obs;
 
   var showProgressIndicator = true.obs;
   showProgressBar() => showProgressIndicator.value = true;
   hideProgressBar() => showProgressIndicator.value = false;
 
+  var selectedSortingAttribute = "".obs;
+  var selectedLocation = "".obs;
+
   Future<void> fetchAllNewsArticlesWithConstraints({String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? location, String? category, String? sources, String? domains}) async {
     showProgressBar();
+    populateSourcesList();
+    populateLocationsList();
+    populateSortList();
     Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines();
     response.fold(
       (l) => print(l),
@@ -50,6 +58,14 @@ class NewsController extends GetxController {
     _locationsOptionsTally.putIfAbsent("Germany", () => false);
     _locationsOptionsTally.putIfAbsent("Mexico", () => false);
     _locationsOptionsTally.putIfAbsent("Italy", () => false);
+    selectedLocation.value = "India";
+  }
+
+  populateSortList() {
+    _sortOptionsTally.putIfAbsent("relevancy", () => false);
+    _sortOptionsTally.putIfAbsent("popularity", () => false);
+    _sortOptionsTally.putIfAbsent("publishedAt", () => false);
+    selectedSortingAttribute.value = "relevancy";
   }
 
 }

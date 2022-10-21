@@ -54,16 +54,16 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                     height: 6,
                   ),
                   Row(
-                    children: const [
-                      Icon(
+                    children: [
+                      const Icon(
                         Icons.location_on,
                         size: SBSizes.primaryIconSize,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 6,
                       ),
                       Text(
-                        "India",
+                        _newsController.selectedLocation.value,
                         style: SBTextStyles.titleLight3,
                       ),
                     ],
@@ -106,7 +106,28 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
           // ]
           [
             const SBSearchBar(),
-            const TitleLayer().wrapWidgetWithPadding(SBPaddings.verticalPadding1),
+            TitleLayer(
+              sortingAttribute: _newsController.selectedSortingAttribute.value,
+            ).wrapWidgetWithPadding(SBPaddings.verticalPadding1).wrapWidgetWithTapGesture(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: SBRadiuses.borderRadius3,
+                  ),
+                  builder: (context) => SBModalSheet(
+                    sheetTitle: "Sort by",
+                    optionsTally: _newsController.sortTally,
+                    selectionType: SelectionType.oneToOne,
+                    optionalCompetionHandler: () {
+                      _newsController.sortTally.forEach((key, value) {
+                        if(value) _newsController.selectedSortingAttribute.value = key;
+                      });
+                    },
+                  ),
+                );
+              },
+            ),
             Expanded(
               child: ListView(
                 children: _newsController.newsArticlesList.map((e) => const ArticleCard()).toList(),
