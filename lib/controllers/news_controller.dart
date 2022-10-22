@@ -3,7 +3,9 @@ import 'package:assgn_news_squareboat/models/news_response.dart';
 import 'package:assgn_news_squareboat/models/source_response.dart';
 import 'package:assgn_news_squareboat/repositories/news_repository.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:simple_connection_checker/simple_connection_checker.dart';
 
 import '../constants/widgets/sbsnackbar.dart';
 import '../injector.dart';
@@ -14,7 +16,9 @@ class NewsController extends GetxController {
 
   final Map<String, bool> _sourcesOptionsTally = {};
   Map<String, bool> get sourcesTally => _sourcesOptionsTally;
-  bool isSourceSelectionActive = false;
+  
+  bool _isSourceSelectionActive = false;
+  bool get isSourceSelectionActive => _isSourceSelectionActive;
 
   final Map<String, bool> _locationsOptionsTally = {};
   Map<String, bool> get locationsTally => _locationsOptionsTally;
@@ -34,10 +38,25 @@ class NewsController extends GetxController {
   
   bool _haveRequestedOnce = false;
   bool get haveRequestedOnce => _haveRequestedOnce;
+  
+  bool _isConnectedToInternet = true;
+  bool get connectionStatus => _isConnectedToInternet;
+
+  late final String confidentialApiKey;
+
+  loadApiKey() async {
+    confidentialApiKey = await rootBundle.loadString(SBAssets.apiKey2);
+  }
 
   Future<void> fetchAllNewsArticlesWithConstraints(String location, {String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
     showProgressBar();
-    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(location, sources: sources, sortBy: sortBy);
+    await checkInternetConnection();
+    if(!connectionStatus) {
+      hideProgressBar();
+      SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.nointernetconnection);
+      return;
+    }
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(confidentialApiKey, location, sources: sources, sortBy: sortBy);
     _haveRequestedOnce = true;
     response.fold(
       (l) {
@@ -53,7 +72,7 @@ class NewsController extends GetxController {
   }
   
   populateSourcesList(String location) async {
-    Either<Failure, SourcesResponse> response = await getIt.get<NewsRepository>().getAllSourcesForRegion(location);
+    Either<Failure, SourcesResponse> response = await getIt.get<NewsRepository>().getAllSourcesForRegion(confidentialApiKey, location);
     response.fold(
       (l) {
         _sourcesOptionsTally.clear();
@@ -67,10 +86,10 @@ class NewsController extends GetxController {
   }
 
   populateLocationsList() {
+    _locationsOptionsTally.putIfAbsent("in", () => true);
     _locationsOptionsTally.putIfAbsent("au", () => false);
     _locationsOptionsTally.putIfAbsent("ca", () => false);
     _locationsOptionsTally.putIfAbsent("co", () => false);
-    _locationsOptionsTally.putIfAbsent("in", () => true);
     _locationsOptionsTally.putIfAbsent("us", () => false);
     selectedLocation.value = _locationsOptionsTally.keys.first;
   }
@@ -80,6 +99,19 @@ class NewsController extends GetxController {
     _sortOptionsTally.putIfAbsent("popularity", () => false);
     _sortOptionsTally.putIfAbsent("publishedAt", () => false);
     selectedSortingAttribute.value = _sortOptionsTally.keys.first;
+  }
+
+  Future<bool> checkInternetConnection() async {
+    _isConnectedToInternet = await SimpleConnectionChecker.isConnectedToInternet();
+    return _isConnectedToInternet;
+  }
+
+  initialiseFilters() {
+    _isSourceSelectionActive = false;
+  }
+
+  setSourceSelectionTo(bool isActive) {
+    _isSourceSelectionActive = isActive;
   }
 
 }
@@ -105,7 +137,7 @@ extension SearchNews on NewsController {
 
   Future<void> fetchEverythingWithQueryConstraint({required String searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
     showProgressBar();
-    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getEverythingFor(selectedLocation.value, query: searchQuery, sources: sources, sortBy: sortBy);
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getEverythingFor(confidentialApiKey, selectedLocation.value, query: searchQuery, sources: sources, sortBy: sortBy);
     response.fold(
       (l) {
         filteredNewsArticlesList.value = [];

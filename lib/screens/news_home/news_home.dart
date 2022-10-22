@@ -25,12 +25,14 @@ class NewsHomeApp extends StatefulWidget {
 class _NewsHomeAppState extends State<NewsHomeApp> {
 
   final NewsController _newsController = Get.find<NewsController>();
-
+  
   @override
   void initState() {
+    _newsController.loadApiKey();
     ViewUtilities.setCustomMessagesForTimestampLabels();
     _newsController.populateLocationsList();
     _newsController.populateSortList();
+    _newsController.initialiseFilters();
     _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value);
     super.initState();
   }
@@ -102,60 +104,72 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
           ).wrapWidgetWithPadding(SBPaddings.bottomPadding3),
           centerTitle: false,
         ),
-        body: Column(
-          children: _newsController.haveRequestedOnce && _newsController.newsArticlesList.isEmpty
-          ? [
-              const Spacer(),
-              const ErrorStateWidget(
-                errorLabel: SBDisplayLabels.noresultsfound,
-                assetAddress: SBAssets.noresultsfound,
-                // actionButton: SBActionButton(
-                //   buttonLabel: SBDisplayLabels.tryagainbutton,
-                //   onPressed: () {
-                //     //
-                //   },
-                // ),
-              ),
-              const Spacer(),
-            ]
-          : [
-            const SBSearchBar(enabled: false,).wrapWidgetWithTapGesture(
-              onPressed: () => Get.toNamed(Routes.searchScreen),
-            ),
-            TitleLayer(
-              sortingAttribute: _newsController.selectedSortingAttribute.value,
-            ).wrapWidgetWithPadding(SBPaddings.verticalPadding1).wrapWidgetWithTapGesture(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: SBRadiuses.borderRadius3,
+        body: !_newsController.connectionStatus
+          ? Column(
+              children: [
+                const Spacer(),
+                  ErrorStateWidget(
+                    errorLabel: SBDisplayLabels.nointernetconnection,
+                    assetAddress: SBAssets.nointernetconnection,
+                    actionButton: SBActionButton(
+                      buttonLabel: SBDisplayLabels.tryagainbutton,
+                      onPressed: () {
+                        _newsController.initialiseFilters();
+                        _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value);
+                      },
+                    ),
                   ),
-                  builder: (context) => SBModalSheet(
-                    sheetTitle: SBDisplayLabels.sortby,
-                    optionsTally: _newsController.sortTally,
-                    selectionType: SelectionType.oneToOne,
-                    optionalCompetionHandler: (selectedValues) {
-                      _newsController.sortTally.forEach((key, value) {
-                        if(value) _newsController.selectedSortingAttribute.value = key;
-                      });
-                      _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value, sortBy: selectedValues.first);
-                    },
+                  const Spacer(),
+              ],
+            )
+          : Column(
+              children: _newsController.haveRequestedOnce && _newsController.newsArticlesList.isEmpty
+              ? [
+                  const Spacer(),
+                  const ErrorStateWidget(
+                    errorLabel: SBDisplayLabels.noresultsfound,
+                    assetAddress: SBAssets.noresultsfound,
                   ),
-                );
-              },
-            ),
-            Expanded(
-              child: ListView(
-                children: _newsController.newsArticlesList.map(
-                  (article) => ArticleCard(article: article,).wrapWidgetWithTapGesture(
-                    onPressed: () => Get.toNamed(Routes.articleDetails, arguments: GetArguements(article: article)),
+                  const Spacer(),
+                ]
+              : [
+                const SBSearchBar(enabled: false,).wrapWidgetWithTapGesture(
+                  onPressed: () => Get.toNamed(Routes.searchScreen),
+                ),
+                TitleLayer(
+                  sortingAttribute: _newsController.selectedSortingAttribute.value,
+                ).wrapWidgetWithPadding(SBPaddings.verticalPadding1).wrapWidgetWithTapGesture(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: SBRadiuses.borderRadius3,
+                      ),
+                      builder: (context) => SBModalSheet(
+                        sheetTitle: SBDisplayLabels.sortby,
+                        optionsTally: _newsController.sortTally,
+                        selectionType: SelectionType.oneToOne,
+                        optionalCompetionHandler: (selectedValues) {
+                          _newsController.sortTally.forEach((key, value) {
+                            if(value) _newsController.selectedSortingAttribute.value = key;
+                          });
+                          _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value, sortBy: selectedValues.first);
+                        },
+                      ),
+                    );
+                  },
+                ),
+                Expanded(
+                  child: ListView(
+                    children: _newsController.newsArticlesList.map(
+                      (article) => ArticleCard(article: article,).wrapWidgetWithTapGesture(
+                        onPressed: () => Get.toNamed(Routes.articleDetails, arguments: GetArguements(article: article)),
+                      )
+                    ).toList(),
                   )
-                ).toList(),
-              )
-            ),
-          ],
-        ).wrapWidgetWithPadding(SBPaddings.padding1),
+                ),
+              ],
+            ).wrapWidgetWithPadding(SBPaddings.padding1),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             showModalBottomSheet(
@@ -168,7 +182,8 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                 optionsTally: _newsController.sourcesTally,
                 selectionType: SelectionType.oneToMany,
                 optionalCompetionHandler: (selectedValues) {
-                  _newsController.isSourceSelectionActive = selectedValues.isEmpty ? false : true;
+                  // _newsController.isSourceSelectionActive = selectedValues.isEmpty ? false : true;
+                  _newsController.setSourceSelectionTo(selectedValues.isNotEmpty);
                   _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value, sources: selectedValues);
                 },
               ),

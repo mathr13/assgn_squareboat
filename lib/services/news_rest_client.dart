@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:retrofit/retrofit.dart';
+// import 'package:retrofit/retrofit.dart';
 
 import '../models/news_response.dart';
 import '../models/source_response.dart';
 import 'api_endpoints.dart';
 
-@RestApi()
+// @RestApi()
 class NewsRestClient {
 
   final Dio dio;

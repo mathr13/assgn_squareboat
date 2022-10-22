@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import 'injector.dart';
 import 'navigation/navigation_values.dart';
-import 'screens/news_home/news_home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +18,8 @@ class SBANewsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const NewsHomeApp(),
+      initialRoute: Routes.initial,
       getPages: AppPages.pages,
-      // home: NewsDetail(),
     );
   }
 }

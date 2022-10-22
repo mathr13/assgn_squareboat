@@ -20,7 +20,7 @@ abstract class SBDisplayLabels {
   static const unknownsource = "unknown source";
   static const nocontenttoshow = "no content to show";
   static const somethingwentwrong = "something went wrong";
-  static const nointernetConnection = "No Internet Connection";
+  static const nointernetconnection = "No Internet Connection";
   static const unknownerror = "Unknown Error";
 
 }

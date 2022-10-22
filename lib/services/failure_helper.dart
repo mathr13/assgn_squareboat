@@ -17,7 +17,7 @@ class Failure {
           message = res?.data['message'] ?? res?.data['error_messages'][0] ?? SBDisplayLabels.somethingwentwrong;
         } catch (e) {
           message = SBDisplayLabels.somethingwentwrong;
-          if (message == SBDisplayLabels.nointernetConnection) statusCode = 101;
+          if (message == SBDisplayLabels.nointernetconnection) statusCode = 101;
         }
         break;
       default:

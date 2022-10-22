@@ -70,4 +70,10 @@ abstract class SBTextStyles {
     fontWeight: FontWeight.w600
   );
 
+  static const appTitle = TextStyle(
+    fontSize: 40,
+    color: SBColours.primaryTextLight,
+    fontWeight: FontWeight.w700
+  );
+
 }
