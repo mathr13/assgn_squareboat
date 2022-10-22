@@ -48,14 +48,14 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               const Text(
-                "MyNEWS",
+                SBValueLabels.appTitle,
                 style: SBTextStyles.titleLight1,
                 ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const Text(
-                    "LOCATION",
+                    SBDisplayLabels.locationLabel,
                     style: SBTextStyles.titleLight2,
                   ),
                   const SizedBox(
@@ -85,7 +85,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                       borderRadius: SBRadiuses.borderRadius3,
                     ),
                     builder: (context) => SBModalSheet(
-                      sheetTitle: "Choose your location",
+                      sheetTitle: SBDisplayLabels.chooseyourlocation,
                       optionsTally: _newsController.locationsTally,
                       selectionType: SelectionType.oneToOne,
                       optionalCompetionHandler: (selectedValues) {
@@ -104,19 +104,19 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
         ),
         body: Column(
           children: _newsController.newsArticlesList.isEmpty
-          ? const [
-              Spacer(),
-              ErrorStateWidget(
-                errorLabel: "No Results!",
-                assetAddress: "assets/images/no_result_found.png",
+          ? [
+              const Spacer(),
+              const ErrorStateWidget(
+                errorLabel: SBDisplayLabels.noresultsfound,
+                assetAddress: SBAssets.noresultsfound,
                 // actionButton: SBActionButton(
-                //   buttonLabel: "Try again",
+                //   buttonLabel: SBDisplayLabels.tryagain,
                 //   onPressed: () {
-                //     print("try again pressed");
+                //     //
                 //   },
                 // ),
               ),
-              Spacer(),
+              const Spacer(),
             ]
           : [
             const SBSearchBar(enabled: false,).wrapWidgetWithTapGesture(
@@ -132,7 +132,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                     borderRadius: SBRadiuses.borderRadius3,
                   ),
                   builder: (context) => SBModalSheet(
-                    sheetTitle: "Sort by",
+                    sheetTitle: SBDisplayLabels.sortby,
                     optionsTally: _newsController.sortTally,
                     selectionType: SelectionType.oneToOne,
                     optionalCompetionHandler: (selectedValues) {
@@ -164,7 +164,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                 borderRadius: SBRadiuses.borderRadius3,
               ),
               builder: (context) => SBModalSheet(
-                sheetTitle: "Filter by sources",
+                sheetTitle: SBDisplayLabels.filterbysources,
                 optionsTally: _newsController.sourcesTally,
                 selectionType: SelectionType.oneToMany,
                 optionalCompetionHandler: (selectedValues) {
@@ -186,7 +186,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                 right: 0,
                 child: CircleAvatar(
                   radius: _newsController.isSourceSelectionActive ? 4 : 0,
-                  backgroundColor: Colors.red,
+                  backgroundColor: SBColours.notificationLight,
                 ),
               ),
             ],

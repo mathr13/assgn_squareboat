@@ -31,15 +31,15 @@ class NewsDetail extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           ArticleHeaderImage(
-            title: article.title ?? "",
+            title: article.title ?? SBDisplayLabels.untitled,
             imageUrl: article.urlToImage ?? "",
           ),
           ArticleTitle(
-            title: article.source?.name ?? "unknown source",
+            title: article.source?.name ?? SBDisplayLabels.unknownsource,
             timeInfo: ViewUtilities.getPrettifiedTimeLabelFor(article.publishedAt),
           ).wrapWidgetWithPadding(SBPaddings.padding1),
           Text(
-            article.content ?? "",
+            article.content ?? SBDisplayLabels.nocontenttoshow,
             style: const TextStyle(
               fontSize: 18,
               color: SBColours.primaryBckgDark,

@@ -14,13 +14,13 @@ class TitleLayer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text(
-          "Top Headlines",
+          SBDisplayLabels.topheadlines,
           style: SBTextStyles.headline1,
         ),
         Row(
           children: [
             const Text(
-              "Sort: ",
+              SBDisplayLabels.sort,
               style: SBTextStyles.content4,
             ),
             Text(

@@ -31,6 +31,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: SBColours.secondaryBckgLight,
       appBar: AppBar(
         backgroundColor: SBColours.primaryBckgLight,
         leading: const Icon(

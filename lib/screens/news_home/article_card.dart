@@ -34,7 +34,7 @@ class ArticleCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  article.source?.name ?? "unknown source",
+                  article.source?.name ?? SBDisplayLabels.unknownsource,
                   style: const TextStyle(
                     fontSize: 18,
                     color: SBColours.primaryBckgDark,
@@ -43,7 +43,7 @@ class ArticleCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  article.title ?? "untitled",
+                  article.title ?? SBDisplayLabels.untitled,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -56,7 +56,6 @@ class ArticleCard extends StatelessWidget {
                 ),
                 Text(
                   ViewUtilities.getTimeLabelFor(article.publishedAt),
-                  // article.publishedAt ?? "10 min ago",
                   maxLines: 1,
                   style: SBTextStyles.content4,
                 ),

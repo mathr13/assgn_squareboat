@@ -25,7 +25,7 @@ class SBSearchBar extends StatelessWidget {
         autofocus: enabled,
         decoration: const InputDecoration(
           border: InputBorder.none,
-          hintText: "Search for news, topics..",
+          hintText: SBDisplayLabels.searchbarhinttext,
           suffixIcon: Icon(Icons.search, color: SBColours.primaryBckgDark,),
           contentPadding: SBPaddings.verticalPadding2
         ),

@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 abstract class SBColours {
 
@@ -9,5 +9,7 @@ abstract class SBColours {
 
   static const Color primaryTextLight = Color(0xffFFFFFF);
   static const Color primaryTextDark = Color(0xff000000);
+
+  static const Color notificationLight = Colors.red;
 
 }
