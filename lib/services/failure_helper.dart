@@ -1,3 +1,4 @@
+import 'package:assgn_news_squareboat/constants/constant_values.dart';
 import 'package:dio/dio.dart';
 
 class Failure {
@@ -13,15 +14,14 @@ class Failure {
         try {
           final res = (error as DioError).response;
           statusCode = res?.statusCode ?? 0;
-          message = res?.data['message'] ?? res?.data['error_messages'][0] ?? "something went wrong";
+          message = res?.data['message'] ?? res?.data['error_messages'][0] ?? SBDisplayLabels.somethingwentwrong;
         } catch (e) {
-          message = "something went wrong";
-          if (message == "No Internet Connection") statusCode = 101;
+          message = SBDisplayLabels.somethingwentwrong;
+          if (message == SBDisplayLabels.nointernetconnection) statusCode = 101;
         }
-        // TODO: Error Snach Bar Implementation
         break;
       default:
-        message = "Unknown Error";
+        message = SBDisplayLabels.unknownerror;
     }
   }
 }

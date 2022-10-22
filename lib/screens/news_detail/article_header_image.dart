@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ArticleHeaderImage extends StatelessWidget {
-  const ArticleHeaderImage({super.key});
+
+  final String imageUrl;
+  final String title;
+
+  const ArticleHeaderImage({super.key, required this.imageUrl, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +15,7 @@ class ArticleHeaderImage extends StatelessWidget {
         children: [
           SizedBox(
             height: MediaQuery.of(context).size.height/2,
-            child: Image.network("https://assets.turbologo.com/blog/en/2019/10/19084952/ferrari-logo-illustration-958x575.jpg"),
+            child: Image.network(imageUrl),
           ),
           Container(
             height: MediaQuery.of(context).size.height/2,
@@ -22,15 +26,15 @@ class ArticleHeaderImage extends StatelessWidget {
                 colors: [Colors.transparent, Colors.black])
               ),
           ),
-          const Positioned(
+          Positioned(
             bottom: 16,
             right: 16,
             left: 16,
             child: Text(
-              "Ferrari has re-launched it's legacy model, the F430. The most beautiful ferrari ever. It is going to cost 10 cr in India",
+              title,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
                 fontWeight: FontWeight.w600
@@ -39,23 +43,6 @@ class ArticleHeaderImage extends StatelessWidget {
           ),
         ],
       ),
-      // child: ShaderMask(
-      //   shaderCallback: (Rect bounds) {
-      //     return const LinearGradient(
-      //       begin: Alignment.topCenter,
-      //       end: Alignment.bottomCenter,
-      //       colors: [
-      //         Colors.transparent,
-      //         Colors.black87
-      //       ]
-      //     ).createShader(bounds);
-      //   },
-      //   child: Container(
-      //     height: MediaQuery.of(context).size.height/2,
-      //     color: Colors.blue,
-      //     child: Image.network("https://assets.turbologo.com/blog/en/2019/10/19084952/ferrari-logo-illustration-958x575.jpg"),
-      //   ),
-      // ),
     );
   }
 }

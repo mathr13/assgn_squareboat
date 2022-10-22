@@ -1,42 +1,71 @@
-import 'package:assgn_news_squareboat/services/api_endpoints.dart';
 import 'package:dio/dio.dart';
-import 'package:retrofit/retrofit.dart';
+// import 'package:retrofit/retrofit.dart';
 
 import '../models/news_response.dart';
+import '../models/source_response.dart';
+import 'api_endpoints.dart';
 
-part 'news_rest_client.g.dart';
+// @RestApi()
+class NewsRestClient {
 
-@RestApi()
-abstract class NewsRestClient {
+  final Dio dio;
 
-  factory NewsRestClient(Dio dio) = _NewsRestClient;
+  NewsRestClient(this.dio);
 
-  @GET(Endpoints.topHeadlines)
-  Future<NewsResponse> getHeadlines(
-    @Path("apiKey") String apiKey,
-    {
-      @Path("query") String? query,
-      @Path("sources") String? sources,
-      @Path("country") String? country,
-      @Path("category") String? category,
-      @Path("sortBy") String? sortBy,
-      @Path("pageSize") String? pageSize,
-      @Path("page") String? page,
-    }
-  );
+  Future<NewsResponse> fetchHeadlines(String apiKey, {String? query, List<String>? sources, String? country, String? category, String? sortBy, String? pageSize, String? page}) async {
+    String url = EndpointsBaseUrls.topHeadlines;
+    url += getUrlQueryForAttribute("language", "en");
+    url += getUrlQueryForAttribute("apiKey", apiKey);
+    url += getUrlQueryForAttribute("query", query);
+    sources?.forEach((source) {
+      url += getUrlQueryForAttribute("sources", source);
+      url += ",";
+    });
+    if(url.endsWith(",")) url = url.substring(0, url.length-1);
+    url += getUrlQueryForAttribute("country", country);
+    url += getUrlQueryForAttribute("category", category);
+    url += getUrlQueryForAttribute("sortBy", sortBy);
+    url += getUrlQueryForAttribute("pageSize", pageSize);
+    url += getUrlQueryForAttribute("page", page);
+    url = url.substring(0, url.length-1);
+    var response = await dio.get(url);
+    return NewsResponse.fromJson(response.data);
+  }
 
-  @GET(Endpoints.everything)
-  Future<NewsResponse> getEverything(
-    @Path("apiKey") String apiKey,
-    {
-      @Path("query") String? query,
-      @Path("sources") String? sources,
-      @Path("fromDate") String? fromDate,
-      @Path("toDate") String? toDate,
-      @Path("sortBy") String? sortBy,
-      @Path("pageSize") String? pageSize,
-      @Path("page") String? page,
-    }
-  );
+  Future<SourcesResponse> fetchSourcesForLocation(String apiKey, String country) async {
+    String url = EndpointsBaseUrls.sources;
+    url += getUrlQueryForAttribute("language", "en");
+    url += getUrlQueryForAttribute("apiKey", apiKey);
+    url += getUrlQueryForAttribute("country", country);
+    var response = await dio.get(url);
+    return SourcesResponse.fromJson(response.data);
+  }
+
+  Future<NewsResponse> fetchEverything(String apiKey, {required String query, List<String>? sources, String? country, String? from, String? to, String? sortBy, String? pageSize, String? page}) async {
+    String url = EndpointsBaseUrls.everything;
+    url += getUrlQueryForAttribute("language", "en");
+    url += getUrlQueryForAttribute("apiKey", apiKey);
+    url += getUrlQueryForAttribute("q", query);
+    sources?.forEach((source) {
+      url += getUrlQueryForAttribute("sources", source);
+      url += ",";
+    });
+    if(url.endsWith(",")) url = url.substring(0, url.length-1);
+    url += getUrlQueryForAttribute("country", country);
+    url += getUrlQueryForAttribute("sortBy", sortBy);
+    url += getUrlQueryForAttribute("pageSize", pageSize);
+    url += getUrlQueryForAttribute("page", page);
+    url = url.substring(0, url.length-1);
+    var response = await dio.get(url);
+    return NewsResponse.fromJson(response.data);
+  }
+
+}
+
+extension RestUtilities on NewsRestClient {
+
+  String getUrlQueryForAttribute(String key, String? value) {
+    return value == null ? "" : "$key=$value&";
+  }
 
 }

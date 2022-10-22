@@ -11,7 +11,7 @@ class ExternalLinkOption extends StatelessWidget {
       child: Row(
         children: const [
           Text(
-            "See full story",
+            SBDisplayLabels.seefullstory,
             style: TextStyle(
               color: SBColours.primaryBckgLight,
               fontSize: 16,

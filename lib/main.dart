@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'injector.dart';
-import 'screens/news_home/news_home.dart';
+import 'navigation/navigation_values.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await inject();
-  runApp(const SBANewspp());
+  runApp(const SBANewsApp());
 }
 
-class SBANewspp extends StatelessWidget {
-  const SBANewspp({super.key});
+class SBANewsApp extends StatelessWidget {
+  const SBANewsApp({super.key});
 
   
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: NewsHomeApp(),
-      // home: NewsDetail(),
+      initialRoute: Routes.initial,
+      getPages: AppPages.pages,
     );
   }
 }
