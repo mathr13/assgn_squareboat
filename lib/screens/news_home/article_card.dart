@@ -43,7 +43,7 @@ class ArticleCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  article.content ?? "no content",
+                  article.title ?? "untitled",
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -55,7 +55,8 @@ class ArticleCard extends StatelessWidget {
                   flex: 2,
                 ),
                 Text(
-                  article.publishedAt ?? "10 min ago",
+                  ViewUtilities.getTimeLabelFor(article.publishedAt),
+                  // article.publishedAt ?? "10 min ago",
                   maxLines: 1,
                   style: SBTextStyles.content4,
                 ),
@@ -66,9 +67,10 @@ class ArticleCard extends StatelessWidget {
             aspectRatio: 1,
             child: Container(
               height: double.maxFinite,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: SBColours.primaryBckgDark,
-                borderRadius: SBRadiuses.borderRadius3
+                borderRadius: SBRadiuses.borderRadius3,
+                image: DecorationImage(image: NetworkImage(article.urlToImage ?? ""), fit: BoxFit.cover),
               ),
             ),
           ).wrapWidgetWithPadding(SBPaddings.leftPadding2),

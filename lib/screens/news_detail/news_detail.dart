@@ -26,10 +26,18 @@ class NewsDetail extends StatelessWidget {
         ),
         elevation: 0,
       ),
+      backgroundColor: SBColours.secondaryBckgLight,
       body: ListView(
+        padding: EdgeInsets.zero,
         children: [
-          const ArticleHeaderImage(),
-          const ArticleTitle().wrapWidgetWithPadding(SBPaddings.padding1),
+          ArticleHeaderImage(
+            title: article.title ?? "",
+            imageUrl: article.urlToImage ?? "",
+          ),
+          ArticleTitle(
+            title: article.source?.name ?? "unknown source",
+            timeInfo: ViewUtilities.getPrettifiedTimeLabelFor(article.publishedAt),
+          ).wrapWidgetWithPadding(SBPaddings.padding1),
           Text(
             article.content ?? "",
             style: const TextStyle(

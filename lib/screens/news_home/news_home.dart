@@ -7,6 +7,7 @@ import '../../constants/constant_values.dart';
 import '../../constants/widgets/sbaction_button.dart';
 import '../../constants/widgets/sbmodal_sheet.dart';
 import '../../navigation/navigation_values.dart';
+import '../../services/navigation_helper.dart';
 import 'article_card.dart';
 import 'no_result_found.dart';
 import 'search_bar.dart';
@@ -27,6 +28,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
 
   @override
   void initState() {
+    ViewUtilities.setCustomMessagesForTimestampLabels();
     _newsController.populateLocationsList();
     _newsController.populateSortList();
     _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value);
@@ -147,7 +149,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
               child: ListView(
                 children: _newsController.newsArticlesList.map(
                   (article) => ArticleCard(article: article,).wrapWidgetWithTapGesture(
-                    onPressed: () => Get.toNamed(Routes.articleDetails),
+                    onPressed: () => Get.toNamed(Routes.articleDetails, arguments: GetArguements(article: article)),
                   )
                 ).toList(),
               )
