@@ -1,3 +1,4 @@
+import 'package:assgn_news_squareboat/constants/constant_values.dart';
 import 'package:assgn_news_squareboat/models/news_response.dart';
 import 'package:assgn_news_squareboat/models/source_response.dart';
 import 'package:assgn_news_squareboat/repositories/news_repository.dart';
@@ -30,14 +31,18 @@ class NewsController extends GetxController {
 
   var selectedSortingAttribute = "".obs;
   var selectedLocation = "".obs;
+  
+  bool _haveRequestedOnce = false;
+  bool get haveRequestedOnce => _haveRequestedOnce;
 
   Future<void> fetchAllNewsArticlesWithConstraints(String location, {String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
     showProgressBar();
     Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(location, sources: sources, sortBy: sortBy);
+    _haveRequestedOnce = true;
     response.fold(
       (l) {
         newsArticlesList.value = [];
-        SBSnackbars.errorSnackbar("Error", l.message);
+        SBSnackbars.errorSnackbar(SBDisplayLabels.error, l.message);
       },
       (r) {
         newsArticlesList.value = r.articles ?? [];
@@ -52,7 +57,7 @@ class NewsController extends GetxController {
     response.fold(
       (l) {
         _sourcesOptionsTally.clear();
-        SBSnackbars.errorSnackbar("Error", l.message);
+        SBSnackbars.errorSnackbar(SBDisplayLabels.error, l.message);
       },
       (r) {
         _sourcesOptionsTally.clear();
@@ -62,27 +67,19 @@ class NewsController extends GetxController {
   }
 
   populateLocationsList() {
-    _locationsOptionsTally.putIfAbsent("ar", () => false);
     _locationsOptionsTally.putIfAbsent("au", () => false);
-    _locationsOptionsTally.putIfAbsent("br", () => false);
     _locationsOptionsTally.putIfAbsent("ca", () => false);
-    _locationsOptionsTally.putIfAbsent("cn", () => false);
     _locationsOptionsTally.putIfAbsent("co", () => false);
-    _locationsOptionsTally.putIfAbsent("de", () => false);
-    _locationsOptionsTally.putIfAbsent("fr", () => false);
-    _locationsOptionsTally.putIfAbsent("gb", () => false);
-    _locationsOptionsTally.putIfAbsent("hk", () => false);
     _locationsOptionsTally.putIfAbsent("in", () => true);
-    _locationsOptionsTally.putIfAbsent("id", () => false);
     _locationsOptionsTally.putIfAbsent("us", () => false);
-    selectedLocation.value = "in";
+    selectedLocation.value = _locationsOptionsTally.keys.first;
   }
 
   populateSortList() {
     _sortOptionsTally.putIfAbsent("relevancy", () => true);
     _sortOptionsTally.putIfAbsent("popularity", () => false);
     _sortOptionsTally.putIfAbsent("publishedAt", () => false);
-    selectedSortingAttribute.value = "relevancy";
+    selectedSortingAttribute.value = _sortOptionsTally.keys.first;
   }
 
 }
@@ -112,7 +109,7 @@ extension SearchNews on NewsController {
     response.fold(
       (l) {
         filteredNewsArticlesList.value = [];
-        SBSnackbars.errorSnackbar("Error", l.message);
+        SBSnackbars.errorSnackbar(SBDisplayLabels.error, l.message);
       },
       (r) {
         filteredNewsArticlesList.value = r.articles ?? [];

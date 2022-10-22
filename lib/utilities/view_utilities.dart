@@ -4,6 +4,9 @@ import '../constants/custom_timestamp_messages.dart';
 
 abstract class ViewUtilities {
 
+  static const Map<int, String> monthsTally = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"};
+  static const Map<String, String> countryTally = {"co": "Colombia", "au": "Australia", "in": "India", "ca": "Canada", "us": "USA"};
+
   static void setCustomMessagesForTimestampLabels() {
     GetTimeAgo.setCustomLocaleMessages('en', CustomTimestampMessages());
   }
@@ -24,9 +27,8 @@ abstract class ViewUtilities {
     return "time unknown";
   }
 
-  static String getMonthLabelFor(int monthIndex) {
-    Map<int, String> monthsTally = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"};
-    return monthsTally[monthIndex]!;
-  }
+  static String getMonthLabelFor(int monthIndex) => monthsTally[monthIndex]!;
+
+  static String getCountryLabelForIsoCode(String countryCode) => countryTally[countryCode] ?? "countryCode";
 
 }

@@ -10,12 +10,18 @@ abstract class SBDisplayLabels {
   static const topheadlines = "Top Headlines";
   static const sort = "Sort: ";
   static const seefullstory = "See full story";
-  static const tryagain = "Try again";
+  
+  static const tryagainbutton = "Try again";
+  static const applybutton = "Apply";
 
   static const noresultsfound = "No Results!";
   static const untitled = "untitled";
+  static const error = "Error";
   static const unknownsource = "unknown source";
   static const nocontenttoshow = "no content to show";
+  static const somethingwentwrong = "something went wrong";
+  static const nointernetConnection = "No Internet Connection";
+  static const unknownerror = "Unknown Error";
 
 }
 

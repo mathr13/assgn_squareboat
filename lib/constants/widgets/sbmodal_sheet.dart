@@ -83,7 +83,7 @@ class _SBModalSheetState extends State<SBModalSheet> {
             }
           ),
           SBActionButton(
-            buttonLabel: "Apply",
+            buttonLabel: SBDisplayLabels.applybutton,
             onPressed: () => _sheetController.applyFilter(widget.optionsTally, optionalCompetionHandler: widget.optionalCompetionHandler),
           ).wrapWidgetWithPadding(SBPaddings.topPadding2),
         ]

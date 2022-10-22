@@ -103,14 +103,14 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
           centerTitle: false,
         ),
         body: Column(
-          children: _newsController.newsArticlesList.isEmpty
+          children: _newsController.haveRequestedOnce && _newsController.newsArticlesList.isEmpty
           ? [
               const Spacer(),
               const ErrorStateWidget(
                 errorLabel: SBDisplayLabels.noresultsfound,
                 assetAddress: SBAssets.noresultsfound,
                 // actionButton: SBActionButton(
-                //   buttonLabel: SBDisplayLabels.tryagain,
+                //   buttonLabel: SBDisplayLabels.tryagainbutton,
                 //   onPressed: () {
                 //     //
                 //   },
