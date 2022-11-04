@@ -49,7 +49,7 @@ class NewsController extends GetxController {
     confidentialApiKey = await rootBundle.loadString(SBAssets.apiKey2);
   }
 
-  Future<void> fetchAllNewsArticlesWithConstraints(String location, {String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
+  Future<void> fetchAllNewsArticlesWithConstraints({String? location, String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
     showProgressBar();
     await checkInternetConnection();
     if(!connectionStatus) {
@@ -57,7 +57,7 @@ class NewsController extends GetxController {
       SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.nointernetconnection);
       return;
     }
-    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(confidentialApiKey, location, sources: sources?.commaSeperated(), sortBy: sortBy);
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(confidentialApiKey, country: location, sources: sources?.commaSeperated(), sortBy: sortBy);
     _haveRequestedOnce = true;
     response.fold(
       (l) {
@@ -66,13 +66,14 @@ class NewsController extends GetxController {
       },
       (r) {
         newsArticlesList.value = r.articles ?? [];
-        populateSourcesList(location);
+        if (location != null) populateSourcesList(location);
       }
     );
     hideProgressBar();
   }
   
   populateSourcesList(String location) async {
+    _isSourceSelectionActive = false;
     Either<Failure, SourcesResponse> response = await getIt.get<NewsRepository>().getAllSourcesForRegion(confidentialApiKey, location);
     response.fold(
       (l) {
@@ -130,7 +131,7 @@ extension SearchNews on NewsController {
 
   Future<void> fetchEverythingWithQueryConstraint({required String searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
     showProgressBar();
-    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getEverythingFor(confidentialApiKey, selectedLocation.value, query: searchQuery, sources: sources?.commaSeperated(), sortBy: sortBy);
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getEverythingFor(confidentialApiKey, country: selectedLocation.value, query: searchQuery, sources: sources?.commaSeperated(), sortBy: sortBy);
     response.fold(
       (l) {
         filteredNewsArticlesList.value = [];
