@@ -33,7 +33,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
     _newsController.populateLocationsList();
     _newsController.populateSortList();
     _newsController.initialiseFilters();
-    _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value);
+    _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation.value);
     super.initState();
   }
 
@@ -94,7 +94,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                         _newsController.locationsTally.forEach((key, value) {
                           if(value) _newsController.selectedLocation.value = key;
                         });
-                        _newsController.fetchAllNewsArticlesWithConstraints(selectedValues.first);
+                        _newsController.fetchAllNewsArticlesWithConstraints(location: selectedValues.first);
                       },
                     ),
                   );
@@ -115,7 +115,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                       buttonLabel: SBDisplayLabels.tryagainbutton,
                       onPressed: () {
                         _newsController.initialiseFilters();
-                        _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value);
+                        _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation.value);
                       },
                     ),
                   ),
@@ -153,7 +153,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                           _newsController.sortTally.forEach((key, value) {
                             if(value) _newsController.selectedSortingAttribute.value = key;
                           });
-                          _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value, sortBy: selectedValues.first);
+                          _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation.value, sortBy: selectedValues.first);
                         },
                       ),
                     );
@@ -182,9 +182,12 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                 optionsTally: _newsController.sourcesTally,
                 selectionType: SelectionType.oneToMany,
                 optionalCompetionHandler: (selectedValues) {
-                  // _newsController.isSourceSelectionActive = selectedValues.isEmpty ? false : true;
                   _newsController.setSourceSelectionTo(selectedValues.isNotEmpty);
-                  _newsController.fetchAllNewsArticlesWithConstraints(_newsController.selectedLocation.value, sources: selectedValues);
+                  if(selectedValues.isNotEmpty) {
+                  _newsController.fetchAllNewsArticlesWithConstraints(sources: selectedValues);
+                  }else {
+                    _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation.value);
+                  }
                 },
               ),
             );
