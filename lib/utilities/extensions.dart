@@ -33,3 +33,17 @@ extension AdditionalWidgetUtilities on Widget {
   }
 
 }
+
+extension ListUtilities on List<String> {
+
+  String commaSeperated() {
+    String result = "";
+    for (String item in this) {
+      result += "$item,";
+    }
+    result = result.replaceAll(" ", "-");
+    if(result.endsWith(",")) result = result.substring(0, result.length-1);
+    return result;
+  }
+
+}

@@ -12,6 +12,8 @@ import '../injector.dart';
 import '../models/article.dart';
 import '../services/failure_helper.dart';
 
+import '../utilities/utility_values.dart';
+
 class NewsController extends GetxController {
   
   bool _isSourceSelectionActive = false;
@@ -55,7 +57,7 @@ class NewsController extends GetxController {
       SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.nointernetconnection);
       return;
     }
-    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(confidentialApiKey, location, sources: sources, sortBy: sortBy);
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(confidentialApiKey, location, sources: sources?.commaSeperated(), sortBy: sortBy);
     _haveRequestedOnce = true;
     response.fold(
       (l) {
@@ -128,7 +130,7 @@ extension SearchNews on NewsController {
 
   Future<void> fetchEverythingWithQueryConstraint({required String searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
     showProgressBar();
-    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getEverythingFor(confidentialApiKey, selectedLocation.value, query: searchQuery, sources: sources, sortBy: sortBy);
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getEverythingFor(confidentialApiKey, selectedLocation.value, query: searchQuery, sources: sources?.commaSeperated(), sortBy: sortBy);
     response.fold(
       (l) {
         filteredNewsArticlesList.value = [];
