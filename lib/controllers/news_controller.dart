@@ -13,17 +13,16 @@ import '../models/article.dart';
 import '../services/failure_helper.dart';
 
 class NewsController extends GetxController {
-
-  final Map<String, bool> _sourcesOptionsTally = {};
-  Map<String, bool> get sourcesTally => _sourcesOptionsTally;
   
   bool _isSourceSelectionActive = false;
   bool get isSourceSelectionActive => _isSourceSelectionActive;
 
+  final Map<String, bool> _sourcesOptionsTally = {};
   final Map<String, bool> _locationsOptionsTally = {};
-  Map<String, bool> get locationsTally => _locationsOptionsTally;
-
   final Map<String, bool> _sortOptionsTally = {};
+
+  Map<String, bool> get sourcesTally => _sourcesOptionsTally;
+  Map<String, bool> get locationsTally => _locationsOptionsTally;
   Map<String, bool> get sortTally => _sortOptionsTally;
   
   var newsArticlesList = <Article>[].obs;
@@ -86,18 +85,14 @@ class NewsController extends GetxController {
   }
 
   populateLocationsList() {
-    _locationsOptionsTally.putIfAbsent("in", () => true);
-    _locationsOptionsTally.putIfAbsent("au", () => false);
-    _locationsOptionsTally.putIfAbsent("ca", () => false);
-    _locationsOptionsTally.putIfAbsent("co", () => false);
-    _locationsOptionsTally.putIfAbsent("us", () => false);
+    ["in", "au", "ca", "co", "us"].forEach((countryCode) => _locationsOptionsTally.putIfAbsent(countryCode, () => false));
     selectedLocation.value = _locationsOptionsTally.keys.first;
+    _locationsOptionsTally[_locationsOptionsTally.keys.first] = true;
   }
 
   populateSortList() {
-    _sortOptionsTally.putIfAbsent("relevancy", () => true);
-    _sortOptionsTally.putIfAbsent("popularity", () => false);
-    _sortOptionsTally.putIfAbsent("publishedAt", () => false);
+    ["relevancy", "popularity", "publishedAt"].forEach((sortOption) => _sortOptionsTally.putIfAbsent(sortOption, () => false));
+    _sortOptionsTally[_sortOptionsTally.keys.first] = true;
     selectedSortingAttribute.value = _sortOptionsTally.keys.first;
   }
 
@@ -106,13 +101,9 @@ class NewsController extends GetxController {
     return _isConnectedToInternet;
   }
 
-  initialiseFilters() {
-    _isSourceSelectionActive = false;
-  }
+  initialiseFilters() => _isSourceSelectionActive = false;
 
-  setSourceSelectionTo(bool isActive) {
-    _isSourceSelectionActive = isActive;
-  }
+  setSourceSelectionTo(bool isActive) => _isSourceSelectionActive = isActive;
 
 }
 
