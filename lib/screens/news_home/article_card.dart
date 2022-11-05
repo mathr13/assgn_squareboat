@@ -2,9 +2,13 @@ import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/constant_values.dart';
+import '../../models/article.dart';
 
 class ArticleCard extends StatelessWidget {
-  const ArticleCard({super.key});
+  
+  final Article article;
+
+  const ArticleCard({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +32,31 @@ class ArticleCard extends StatelessWidget {
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  "NewsSource",
-                  style: SBTextStyles.content1,
+                  article.source?.name ?? SBDisplayLabels.unknownsource,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: SBColours.primaryBckgDark,
+                    fontWeight: FontWeight.w600
+                  ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet sapien ac turpis vulputate egestas sit amet in diam. Vivamus orci ex, convallis non velit id, tristique aliquam nisi. Sed sed nisi faucibus tellus facilisis euismod non quis lacus. Donec congue dignissim dui ac imperdiet. Ut eu enim ligula. Duis et neque nisi. Etiam dignissim nulla id neque laoreet rhoncus.",
+                  article.title ?? SBDisplayLabels.untitled,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: SBTextStyles.content2,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: SBColours.primaryBckgDark,
+                  ),
                 ),
-                Spacer(
+                const Spacer(
                   flex: 2,
                 ),
                 Text(
-                  "10 min ago",
+                  ViewUtilities.getTimeLabelFor(article.publishedAt),
+                  maxLines: 1,
                   style: SBTextStyles.content4,
                 ),
               ],
@@ -54,9 +66,10 @@ class ArticleCard extends StatelessWidget {
             aspectRatio: 1,
             child: Container(
               height: double.maxFinite,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: SBColours.primaryBckgDark,
-                borderRadius: SBRadiuses.borderRadius3
+                borderRadius: SBRadiuses.borderRadius3,
+                image: DecorationImage(image: NetworkImage(article.urlToImage ?? ""), fit: BoxFit.cover),
               ),
             ),
           ).wrapWidgetWithPadding(SBPaddings.leftPadding2),

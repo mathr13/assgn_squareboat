@@ -24,12 +24,17 @@ class SBModalSheetController {
     }
   }
 
-  applyFilter(Map<String, bool> optionsTally) {
+  applyFilter(Map<String, bool> optionsTally, {Function(List<String>)? optionalCompetionHandler}) {
+    List<String> selectedOptions = [];
     for(int i=0;i<getOptions.length;i++) {
       String option = getOptions[i];
       optionsTally[option] = getOptionsStatus[i];
-      Get.back();
+      if(getOptionsStatus[i]) selectedOptions.add(option);
     }
+    if (optionalCompetionHandler != null) {
+      optionalCompetionHandler(selectedOptions);
+    }
+    Get.back();
   }
 
 }

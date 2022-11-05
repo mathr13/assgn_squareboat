@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import '../../constants/constant_values.dart';
 
 class TitleLayer extends StatelessWidget {
-  const TitleLayer({super.key});
+
+  final String sortingAttribute;
+
+  const TitleLayer({super.key, required this.sortingAttribute});
 
   @override
   Widget build(BuildContext context) {
@@ -11,20 +14,20 @@ class TitleLayer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text(
-          "Top Headlines",
+          SBDisplayLabels.topheadlines,
           style: SBTextStyles.headline1,
         ),
         Row(
-          children: const [
-            Text(
-              "Sort: ",
+          children: [
+            const Text(
+              SBDisplayLabels.sort,
               style: SBTextStyles.content4,
             ),
             Text(
-              "Newest",
+              sortingAttribute,
               style: SBTextStyles.content3,
             ),
-            Icon(
+            const Icon(
               Icons.arrow_drop_down_sharp,
               color: SBColours.primaryBckgDark,
             ),
