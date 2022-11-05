@@ -19,6 +19,6 @@ abstract class NewsRestClient {
   Future<SourcesResponse> fetchSourcesForLocation(@Path("apiKey") String apiKey, @Query("country") String country);
 
   @GET(EndpointsBaseUrls.everything)
-  Future<NewsResponse> fetchEverything(@Path("apiKey") String apiKey, {@Query("query") required String query, @Query("sources") String? sources, @Query("country") String? country, @Query("from") String? from, @Query("to") String? to, @Query("sortBy") String? sortBy, @Query("pageSize") int? pageSize, @Query("page") int? page});
+  Future<NewsResponse> fetchEverything(@Path("apiKey") String apiKey, {@Query("q") required String query, @Query("sources") String? sources, @Query("country") String? country, @Query("from") String? from, @Query("to") String? to, @Query("sortBy") String? sortBy, @Query("pageSize") int? pageSize, @Query("page") int? page});
 
 }
