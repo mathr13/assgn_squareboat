@@ -1,4 +1,4 @@
-import 'package:assgn_news_squareboat/controllers/news_controller.dart';
+import 'package:assgn_news_squareboat/controllers/news/news_controller.dart';
 import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,10 +30,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
   void initState() {
     _newsController.loadApiKey();
     ViewUtilities.setCustomMessagesForTimestampLabels();
-    _newsController.populateLocationsList();
-    _newsController.populateSortList();
-    _newsController.initialiseFilters();
-    _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation.value);
+    _newsController.populateNews();
     super.initState();
   }
 

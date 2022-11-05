@@ -1,9 +1,10 @@
+import 'package:assgn_news_squareboat/controllers/news/search_handler.dart';
 import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../constants/constant_values.dart';
-import '../../controllers/news_controller.dart';
+import '../../controllers/news/news_controller.dart';
 import '../../navigation/navigation_values.dart';
 import '../../services/navigation_helper.dart';
 import 'article_card.dart';
