@@ -12,21 +12,24 @@ class SBRadioOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          optionTitle,
-          style: TextStyle(
-            fontSize: 16,
+    return Container(
+      color: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            optionTitle,
+            style: TextStyle(
+              fontSize: 16,
+              color: isSelected ? SBColours.primaryBckgLight : const Color(0xff5A6580),
+            ),
+          ),
+          Icon(
+            isSelected ? Icons.radio_button_checked_sharp : Icons.radio_button_off,
             color: isSelected ? SBColours.primaryBckgLight : const Color(0xff5A6580),
           ),
-        ),
-        Icon(
-          isSelected ? Icons.radio_button_checked_sharp : Icons.radio_button_off,
-          color: isSelected ? SBColours.primaryBckgLight : const Color(0xff5A6580),
-        ),
-      ],
-    ).wrapWidgetWithPadding(SBPaddings.verticalPadding3).wrapWidgetWithPadding(SBPaddings.horizontalPadding1);
+        ],
+      ).wrapWidgetWithPadding(SBPaddings.verticalPadding3).wrapWidgetWithPadding(SBPaddings.horizontalPadding1),
+    );
   }
 }

@@ -16,6 +16,7 @@ class SBModalSheetController {
   }
 
   triggerSelectionWith(int index, SelectionType selectionType) {
+    if(selectionType == SelectionType.oneToOne && _statuses[index]) return;
     _statuses[index] = !_statuses[index];
     if(selectionType == SelectionType.oneToOne) {
       for(int i=0;i<_statuses.length;i++) {
