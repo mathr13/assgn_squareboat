@@ -47,5 +47,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need access to your device location to fetch relevant news.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need access to your device location to fetch relevant news.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need access to your device location to fetch relevant news.</string>
 </dict>
 </plist>

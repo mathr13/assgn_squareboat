@@ -21,6 +21,7 @@ abstract class SBDisplayLabels {
   static const nocontenttoshow = "no content to show";
   static const somethingwentwrong = "something went wrong";
   static const nointernetconnection = "No Internet Connection";
+  static const errorfetchinglocation = "Couldn't fetch location";
   static const unknownerror = "Unknown Error";
 
 }
