@@ -22,7 +22,7 @@ class NewsHomeApp extends StatefulWidget {
   }
 }
 
-class _NewsHomeAppState extends State<NewsHomeApp> {
+class _NewsHomeAppState extends State<NewsHomeApp> with ViewUtilities {
 
   final NewsController _newsController = Get.find<NewsController>();
   
@@ -70,7 +70,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                         width: 6,
                       ),
                       Text(
-                        _newsController.selectedLocation.value,
+                        _newsController.selectedLocation,
                         style: SBTextStyles.titleLight3,
                       ),
                     ],
@@ -89,7 +89,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                       selectionType: SelectionType.oneToOne,
                       optionalCompetionHandler: (selectedValues) {
                         _newsController.locationsTally.forEach((key, value) {
-                          if(value) _newsController.selectedLocation.value = key;
+                          if(value) _newsController.selectedLocation = key;
                         });
                         _newsController.fetchAllNewsArticlesWithConstraints(location: selectedValues.first);
                       },
@@ -112,7 +112,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                       buttonLabel: SBDisplayLabels.tryagainbutton,
                       onPressed: () {
                         _newsController.initialiseFilters();
-                        _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation.value);
+                        _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation);
                       },
                     ),
                   ),
@@ -134,7 +134,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                   onPressed: () => Get.toNamed(Routes.searchScreen),
                 ),
                 TitleLayer(
-                  sortingAttribute: _newsController.selectedSortingAttribute.value,
+                  sortingAttribute: _newsController.selectedSortingAttribute,
                 ).wrapWidgetWithPadding(SBPaddings.verticalPadding1).wrapWidgetWithTapGesture(
                   onPressed: () {
                     showModalBottomSheet(
@@ -148,9 +148,9 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                         selectionType: SelectionType.oneToOne,
                         optionalCompetionHandler: (selectedValues) {
                           _newsController.sortTally.forEach((key, value) {
-                            if(value) _newsController.selectedSortingAttribute.value = key;
+                            if(value) _newsController.selectedSortingAttribute = key;
                           });
-                          _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation.value, sortBy: selectedValues.first);
+                          _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation, sortBy: selectedValues.first);
                         },
                       ),
                     );
@@ -183,7 +183,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
                   if(selectedValues.isNotEmpty) {
                   _newsController.fetchAllNewsArticlesWithConstraints(sources: selectedValues);
                   }else {
-                    _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation.value);
+                    _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation);
                   }
                 },
               ),
@@ -207,7 +207,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> {
             ],
           ),
         ),
-      ).withProgressIndicator(_newsController.showProgressIndicator.value),
+      ).withProgressIndicator(getProgressIndicatorStatusFor(_newsController.networkState.value)),
     );
   }
 }

@@ -27,21 +27,19 @@ class NewsController extends GetxController {
   Map<String, bool> get locationsTally => _locationsOptionsTally;
   Map<String, bool> get sortTally => _sortOptionsTally;
   
-  var newsArticlesList = <Article>[].obs;
-  var filteredNewsArticlesList = <Article>[].obs;
+  List<Article> newsArticlesList = [];
+  List<Article> filteredNewsArticlesList = [];
 
-  var showProgressIndicator = true.obs;
-  showProgressBar() => showProgressIndicator.value = true;
-  hideProgressBar() => showProgressIndicator.value = false;
-
-  var selectedSortingAttribute = "".obs;
-  var selectedLocation = "".obs;
+  var selectedSortingAttribute = "";
+  var selectedLocation = "";
   
   bool _haveRequestedOnce = false;
   bool get haveRequestedOnce => _haveRequestedOnce;
   
   bool _isConnectedToInternet = true;
   bool get connectionStatus => _isConnectedToInternet;
+
+  var networkState = NetworkState.ideal.obs;
 
   late final String confidentialApiKey;
 
@@ -57,10 +55,10 @@ class NewsController extends GetxController {
   }
 
   Future<void> fetchAllNewsArticlesWithConstraints({String? location, String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
-    showProgressBar();
-    await checkInternetConnection();
+    networkState.value = NetworkState.inprogress;
+    await checkInternetConnection(NetworkState.inprogress);
     if(!connectionStatus) {
-      hideProgressBar();
+      networkState.value = NetworkState.noconnection;
       SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.nointernetconnection);
       return;
     }
@@ -68,15 +66,16 @@ class NewsController extends GetxController {
     _haveRequestedOnce = true;
     response.fold(
       (l) {
-        newsArticlesList.value = [];
+        newsArticlesList = [];
         SBSnackbars.errorSnackbar(SBDisplayLabels.error, l.message);
+        networkState.value = NetworkState.failed;
       },
       (r) {
-        newsArticlesList.value = r.articles ?? [];
+        newsArticlesList = r.articles ?? [];
         if (location != null) populateSourcesList(location);
+        networkState.value = NetworkState.succeeded;
       }
     );
-    hideProgressBar();
   }
   
   populateSourcesList(String location) async {
@@ -95,21 +94,23 @@ class NewsController extends GetxController {
   }
 
   Future<String> populateLocationsList() async {
+    networkState.value = NetworkState.inprogress;
     _locationsOptionsTally.putIfAbsent(await getDeviceLocation(), () => true);
     ["IN", "AU", "CA", "CO", "US"].forEach((countryCode) => _locationsOptionsTally.putIfAbsent(countryCode, () => false));
-    selectedLocation.value = _locationsOptionsTally.keys.first;
-    return selectedLocation.value;
+    selectedLocation = _locationsOptionsTally.keys.first;
+    networkState.value = NetworkState.succeeded;
+    return selectedLocation;
   }
 
   populateSortList() {
     ["relevancy", "popularity", "publishedAt"].forEach((sortOption) => _sortOptionsTally.putIfAbsent(sortOption, () => false));
     _sortOptionsTally[_sortOptionsTally.keys.first] = true;
-    selectedSortingAttribute.value = _sortOptionsTally.keys.first;
+    selectedSortingAttribute = _sortOptionsTally.keys.first;
   }
 
-  Future<bool> checkInternetConnection() async {
-    _isConnectedToInternet = await SimpleConnectionChecker.isConnectedToInternet();
-    return _isConnectedToInternet;
+  checkInternetConnection(NetworkState state) async {
+    bool status = await SimpleConnectionChecker.isConnectedToInternet();
+    networkState.value = status ? state : NetworkState.noconnection;
   }
 
   initialiseFilters() => _isSourceSelectionActive = false;

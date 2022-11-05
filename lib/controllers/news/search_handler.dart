@@ -17,7 +17,7 @@ extension SearchHandler on NewsController {
   }
 
   initialiseSearch() {
-    filteredNewsArticlesList.value = [];
+    filteredNewsArticlesList = [];
   }
 
   searchForQuery(String searchQuery) {
@@ -29,18 +29,19 @@ extension SearchHandler on NewsController {
   }
 
   Future<void> fetchEverythingWithQueryConstraint({required String searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
-    showProgressBar();
-    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getEverythingFor(confidentialApiKey, country: selectedLocation.value, query: searchQuery, sources: sources?.commaSeperated(), sortBy: sortBy);
+    networkState.value = NetworkState.inprogress;
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getEverythingFor(confidentialApiKey, country: selectedLocation, query: searchQuery, sources: sources?.commaSeperated(), sortBy: sortBy);
     response.fold(
       (l) {
-        filteredNewsArticlesList.value = [];
+        filteredNewsArticlesList = [];
+        networkState.value = NetworkState.failed;
         SBSnackbars.errorSnackbar(SBDisplayLabels.error, l.message);
       },
       (r) {
-        filteredNewsArticlesList.value = r.articles ?? [];
+        filteredNewsArticlesList = r.articles ?? [];
+        networkState.value = NetworkState.succeeded;
       }
     );
-    hideProgressBar();
   }
 
   bool checkValidityOf(String searchQuery) {
