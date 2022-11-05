@@ -19,7 +19,7 @@ class SearchScreen extends StatefulWidget {
   }
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends State<SearchScreen> with ViewUtilities {
 
   final NewsController _newsController = Get.find<NewsController>();
 
@@ -58,7 +58,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     onPressed: () => Get.toNamed(Routes.articleDetails, arguments: GetArguements(article: article)),
                   )
                 ).toList(),
-              ).withProgressIndicator(_newsController.showProgressIndicator.value),
+              ).withProgressIndicator(getProgressIndicatorStatusFor(_newsController.networkState.value)),
             )
           ),
         ],

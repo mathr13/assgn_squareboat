@@ -1,6 +1,7 @@
 import 'package:get_time_ago/get_time_ago.dart';
 
 import '../constants/custom_timestamp_messages.dart';
+import 'utility_values.dart';
 
 abstract class ViewUtilities {
 
@@ -30,5 +31,7 @@ abstract class ViewUtilities {
   static String getMonthLabelFor(int monthIndex) => monthsTally[monthIndex]!;
 
   static String getCountryLabelForIsoCode(String countryCode) => countryTally[countryCode] ?? "countryCode";
+
+  bool getProgressIndicatorStatusFor(NetworkState networkState) => networkState == NetworkState.inprogress ? true : false;
 
 }

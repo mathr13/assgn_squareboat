@@ -8,6 +8,7 @@ import '../../injector.dart';
 import '../../models/location_model.dart';
 import '../../services/failure_helper.dart';
 import '../../services/location_helper.dart';
+import '../../utilities/utility_values.dart';
 import 'news_controller.dart';
 
 extension LocationHandler on NewsController {
@@ -18,7 +19,7 @@ extension LocationHandler on NewsController {
     response.fold(
       (l) {
         SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.errorfetchinglocation);
-        hideProgressBar();
+        networkState.value = NetworkState.failed;
       },
       (r) {
         resultLocation = LocationModel(latitude: r.latitude!, longitude: r.longitude!);
