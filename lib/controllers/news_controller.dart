@@ -144,4 +144,17 @@ extension SearchNews on NewsController {
     hideProgressBar();
   }
 
+  bool checkValidityOf(String searchQuery) {
+    if(searchQuery.length < 3) return false;
+    return true;
+  }
+
+  applySearchWith({required String searchQuery}) {
+    if(checkValidityOf(searchQuery)) {
+      fetchAllNewsArticlesWithConstraints(searchQuery: searchQuery);
+    }else {
+      // error
+    }
+  }
+
 }
