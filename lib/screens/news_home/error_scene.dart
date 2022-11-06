@@ -17,13 +17,17 @@ class ErrorStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Spacer(flex: 2,),
           Image.asset(assetAddress).wrapWidgetWithPadding(SBPaddings.bottomPadding1),
           Text(
             errorLabel,
             style: SBTextStyles.content1,
           ),
-          actionButton.wrapWidgetWithPadding(SBPaddings.topPadding1)
+          const Spacer(),
+          actionButton.wrapWidgetWithPadding(SBPaddings.topPadding1),
+          const Spacer(flex: 2,),
         ],
       ),
     );

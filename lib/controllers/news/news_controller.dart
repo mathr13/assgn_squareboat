@@ -32,12 +32,6 @@ class NewsController extends GetxController {
 
   var selectedSortingAttribute = "";
   var selectedLocation = "";
-  
-  bool _haveRequestedOnce = false;
-  bool get haveRequestedOnce => _haveRequestedOnce;
-  
-  bool _isConnectedToInternet = true;
-  bool get connectionStatus => _isConnectedToInternet;
 
   var networkState = NetworkState.ideal.obs;
 
@@ -57,13 +51,11 @@ class NewsController extends GetxController {
   Future<void> fetchAllNewsArticlesWithConstraints({String? location, String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
     networkState.value = NetworkState.inprogress;
     await checkInternetConnection(NetworkState.inprogress);
-    if(!connectionStatus) {
-      networkState.value = NetworkState.noconnection;
+    if(networkState.value == NetworkState.noconnection) {
       SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.nointernetconnection);
       return;
     }
     Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(confidentialApiKey, country: location, sources: sources?.commaSeperated(), sortBy: sortBy);
-    _haveRequestedOnce = true;
     response.fold(
       (l) {
         newsArticlesList = [];
@@ -95,7 +87,11 @@ class NewsController extends GetxController {
 
   Future<String> populateLocationsList() async {
     networkState.value = NetworkState.inprogress;
+    try {
     _locationsOptionsTally.putIfAbsent(await getDeviceLocation(), () => true);
+    } catch (error) {
+      networkState.value = NetworkState.failed;
+    }
     ["IN", "AU", "CA", "CO", "US"].forEach((countryCode) => _locationsOptionsTally.putIfAbsent(countryCode, () => false));
     selectedLocation = _locationsOptionsTally.keys.first;
     networkState.value = NetworkState.succeeded;

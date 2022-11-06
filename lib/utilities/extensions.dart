@@ -3,6 +3,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../constants/constant_values.dart';
+import '../constants/widgets/sbaction_button.dart';
+import '../screens/news_home/error_scene.dart';
+import 'enumerations.dart';
 
 extension AdditionalWidgetUtilities on Widget {
 
@@ -30,6 +33,38 @@ extension AdditionalWidgetUtilities on Widget {
       color: SBColours.primaryBckgDark,
       child: this
     );
+  }
+
+  Widget handleForNetworkError(NetworkState networkState, {Function()? completionHandler, String? errorTitle, String? errorDescription, String? buttonLabel}) {
+    if(networkState == NetworkState.failed) {
+      return const ErrorStateWidget(
+        errorLabel: SBDisplayLabels.somethingwentwrong,
+        assetAddress: SBAssets.nointernetconnection,
+      );
+    } else if(networkState == NetworkState.noconnection) {
+      return ErrorStateWidget(
+        errorLabel: SBDisplayLabels.nointernetconnection,
+        assetAddress: SBAssets.nointernetconnection,
+        actionButton: SBActionButton(
+          buttonLabel: SBDisplayLabels.tryagainbutton,
+          onPressed: () => completionHandler!(),
+        ),
+      );
+    } else if(networkState == NetworkState.succeeded) {
+      return this;
+    }
+    return const SizedBox();
+  }
+
+  Widget handleForResults(bool isEmpty) {
+    if(isEmpty) {
+      return const ErrorStateWidget(
+        errorLabel: SBDisplayLabels.noresultsfound,
+        assetAddress: SBAssets.noresultsfound,
+      );
+    } else {
+      return this;
+    }
   }
 
 }

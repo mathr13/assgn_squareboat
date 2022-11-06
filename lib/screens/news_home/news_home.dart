@@ -1,15 +1,14 @@
 import 'package:assgn_news_squareboat/controllers/news/news_controller.dart';
+import 'package:assgn_news_squareboat/screens/news_home/filter_button.dart';
 import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../constants/constant_values.dart';
-import '../../constants/widgets/sbaction_button.dart';
 import '../../constants/widgets/sbmodal_sheet.dart';
 import '../../navigation/navigation_values.dart';
 import '../../services/navigation_helper.dart';
 import 'article_card.dart';
-import 'no_result_found.dart';
 import 'search_bar.dart';
 import 'title_layer.dart';
 
@@ -101,111 +100,66 @@ class _NewsHomeAppState extends State<NewsHomeApp> with ViewUtilities {
           ).wrapWidgetWithPadding(SBPaddings.bottomPadding3),
           centerTitle: false,
         ),
-        body: !_newsController.connectionStatus
-          ? Column(
-              children: [
-                const Spacer(),
-                  ErrorStateWidget(
-                    errorLabel: SBDisplayLabels.nointernetconnection,
-                    assetAddress: SBAssets.nointernetconnection,
-                    actionButton: SBActionButton(
-                      buttonLabel: SBDisplayLabels.tryagainbutton,
-                      onPressed: () {
-                        _newsController.initialiseFilters();
-                        _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation);
-                      },
-                    ),
+        body: Column(
+          children: [
+            const SBSearchBar(enabled: false,).wrapWidgetWithTapGesture(
+              onPressed: () => Get.toNamed(Routes.searchScreen),
+            ),
+            TitleLayer(
+              sortingAttribute: _newsController.selectedSortingAttribute,
+            ).wrapWidgetWithPadding(SBPaddings.verticalPadding1).wrapWidgetWithTapGesture(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: SBRadiuses.borderRadius3,
                   ),
-                  const Spacer(),
-              ],
-            )
-          : Column(
-              children: _newsController.haveRequestedOnce && _newsController.newsArticlesList.isEmpty
-              ? [
-                  const Spacer(),
-                  const ErrorStateWidget(
-                    errorLabel: SBDisplayLabels.noresultsfound,
-                    assetAddress: SBAssets.noresultsfound,
+                  builder: (context) => SBModalSheet(
+                    sheetTitle: SBDisplayLabels.sortby,
+                    optionsTally: _newsController.sortTally,
+                    selectionType: SelectionType.oneToOne,
+                    optionalCompetionHandler: (selectedValues) {
+                      _newsController.sortTally.forEach((key, value) {
+                        if(value) _newsController.selectedSortingAttribute = key;
+                      });
+                      _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation, sortBy: selectedValues.first);
+                    },
                   ),
-                  const Spacer(),
-                ]
-              : [
-                const SBSearchBar(enabled: false,).wrapWidgetWithTapGesture(
-                  onPressed: () => Get.toNamed(Routes.searchScreen),
-                ),
-                TitleLayer(
-                  sortingAttribute: _newsController.selectedSortingAttribute,
-                ).wrapWidgetWithPadding(SBPaddings.verticalPadding1).wrapWidgetWithTapGesture(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: SBRadiuses.borderRadius3,
-                      ),
-                      builder: (context) => SBModalSheet(
-                        sheetTitle: SBDisplayLabels.sortby,
-                        optionsTally: _newsController.sortTally,
-                        selectionType: SelectionType.oneToOne,
-                        optionalCompetionHandler: (selectedValues) {
-                          _newsController.sortTally.forEach((key, value) {
-                            if(value) _newsController.selectedSortingAttribute = key;
-                          });
-                          _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation, sortBy: selectedValues.first);
-                        },
-                      ),
-                    );
-                  },
-                ),
-                Expanded(
-                  child: ListView(
-                    children: _newsController.newsArticlesList.map(
-                      (article) => ArticleCard(article: article,).wrapWidgetWithTapGesture(
-                        onPressed: () => Get.toNamed(Routes.articleDetails, arguments: GetArguements(article: article)),
-                      )
-                    ).toList(),
+                );
+              },
+            ),
+            Expanded(
+              child: ListView(
+                children: _newsController.newsArticlesList.map(
+                  (article) => ArticleCard(article: article,).wrapWidgetWithTapGesture(
+                    onPressed: () => Get.toNamed(Routes.articleDetails, arguments: GetArguements(article: article)),
                   )
-                ),
-              ],
-            ).wrapWidgetWithPadding(SBPaddings.padding1),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              shape: const RoundedRectangleBorder(
-                borderRadius: SBRadiuses.borderRadius3,
-              ),
-              builder: (context) => SBModalSheet(
-                sheetTitle: SBDisplayLabels.filterbysources,
-                optionsTally: _newsController.sourcesTally,
-                selectionType: SelectionType.oneToMany,
-                optionalCompetionHandler: (selectedValues) {
-                  _newsController.setSourceSelectionTo(selectedValues.isNotEmpty);
-                  if(selectedValues.isNotEmpty) {
-                  _newsController.fetchAllNewsArticlesWithConstraints(sources: selectedValues);
-                  }else {
-                    _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation);
-                  }
-                },
-              ),
-            );
-          },
-          backgroundColor: SBColours.primaryBckgLight,
-          child: Stack(
-            children: [
-              const Icon(
-                Icons.filter_alt_outlined,
-                size: 32,
-                color: Colors.white,
-              ),
-              Positioned(
-                right: 0,
-                child: CircleAvatar(
-                  radius: _newsController.isSourceSelectionActive ? 4 : 0,
-                  backgroundColor: SBColours.notificationLight,
-                ),
-              ),
-            ],
+                ).toList(),
+              )
+            ),
+          ]
+        ).handleForResults(_newsController.newsArticlesList.isEmpty).handleForNetworkError(_newsController.networkState.value).wrapWidgetWithPadding(SBPaddings.padding1),
+        floatingActionButton: FilterButton(
+          onPressHandler: () => showModalBottomSheet(
+            context: context,
+            shape: const RoundedRectangleBorder(
+              borderRadius: SBRadiuses.borderRadius3,
+            ),
+            builder: (context) => SBModalSheet(
+              sheetTitle: SBDisplayLabels.filterbysources,
+              optionsTally: _newsController.sourcesTally,
+              selectionType: SelectionType.oneToMany,
+              optionalCompetionHandler: (selectedValues) {
+                _newsController.setSourceSelectionTo(selectedValues.isNotEmpty);
+                if(selectedValues.isNotEmpty) {
+                _newsController.fetchAllNewsArticlesWithConstraints(sources: selectedValues);
+                }else {
+                  _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation);
+                }
+              },
+            ),
           ),
+          isActive: _newsController.isSourceSelectionActive,
         ),
       ).withProgressIndicator(getProgressIndicatorStatusFor(_newsController.networkState.value)),
     );
