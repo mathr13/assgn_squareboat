@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 
 import '../../constants/constant_values.dart';
 import '../../models/article.dart';
+import '../../navigation/navigation_values.dart';
+import '../../services/navigation_helper.dart';
 import 'article_header_image.dart';
 import 'article_title.dart';
 import 'external_link_option.dart';
@@ -46,7 +48,9 @@ class NewsDetail extends StatelessWidget {
               fontWeight: FontWeight.w400
             ),
           ).wrapWidgetWithPadding(SBPaddings.horizontalPadding1),
-          const ExternalLinkOption(),
+          const ExternalLinkOption().wrapWidgetWithTapGesture(
+            onPressed: () => Get.toNamed(Routes.articleSource, arguments: GetArguements(sourceUrl: article.url)),
+          ),
         ],
       ),
     );
