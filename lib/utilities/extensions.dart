@@ -41,6 +41,16 @@ extension AdditionalWidgetUtilities on Widget {
         errorLabel: SBDisplayLabels.somethingwentwrong,
         assetAddress: SBAssets.nointernetconnection,
       );
+    } else if(networkState == NetworkState.nolocation) {
+      return ErrorStateWidget(
+        errorLabel: SBDisplayLabels.errorfetchinglocation,
+        errorDescription: "Please go to the settings and enable the location service for this app and then try again.",
+        assetAddress: SBAssets.nointernetconnection,
+        actionButton: SBActionButton(
+          buttonLabel: SBDisplayLabels.tryagainbutton,
+          onPressed: () => completionHandler!(),
+        ),
+      );
     } else if(networkState == NetworkState.noconnection) {
       return ErrorStateWidget(
         errorLabel: SBDisplayLabels.nointernetconnection,

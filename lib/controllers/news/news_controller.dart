@@ -48,7 +48,14 @@ class NewsController extends GetxController {
     fetchAllNewsArticlesWithConstraints(location: country);
   }
 
+  bool isLocationValidated() => selectedLocation != "";
+
   Future<void> fetchAllNewsArticlesWithConstraints({String? location, String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
+    if(!isLocationValidated()) {
+      networkState.value = NetworkState.nolocation;
+      SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.errorfetchinglocation);
+      return;
+    }
     networkState.value = NetworkState.inprogress;
     await checkInternetConnection(NetworkState.inprogress);
     if(networkState.value == NetworkState.noconnection) {
@@ -89,12 +96,12 @@ class NewsController extends GetxController {
     networkState.value = NetworkState.inprogress;
     try {
     _locationsOptionsTally.putIfAbsent(await getDeviceLocation(), () => true);
-    } catch (error) {
-      networkState.value = NetworkState.failed;
-    }
     ["IN", "AU", "CA", "CO", "US"].forEach((countryCode) => _locationsOptionsTally.putIfAbsent(countryCode, () => false));
     selectedLocation = _locationsOptionsTally.keys.first;
     networkState.value = NetworkState.succeeded;
+    } catch (error) {
+      networkState.value = NetworkState.nolocation;
+    }
     return selectedLocation;
   }
 

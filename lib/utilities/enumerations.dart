@@ -3,5 +3,5 @@ enum SelectionType {
 }
 
 enum NetworkState {
-  ideal, inprogress, succeeded, failed, noconnection
+  ideal, inprogress, succeeded, failed, noconnection, nolocation
 }

@@ -19,7 +19,7 @@ extension LocationHandler on NewsController {
     response.fold(
       (l) {
         SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.errorfetchinglocation);
-        networkState.value = NetworkState.failed;
+        networkState.value = NetworkState.nolocation;
       },
       (r) {
         resultLocation = LocationModel(latitude: r.latitude!, longitude: r.longitude!);

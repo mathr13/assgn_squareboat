@@ -138,7 +138,13 @@ class _NewsHomeAppState extends State<NewsHomeApp> with ViewUtilities {
               )
             ),
           ]
-        ).handleForResults(_newsController.newsArticlesList.isEmpty).handleForNetworkError(_newsController.networkState.value).wrapWidgetWithPadding(SBPaddings.padding1),
+        )
+        .handleForResults(_newsController.newsArticlesList.isEmpty)
+        .handleForNetworkError(
+          _newsController.networkState.value,
+          completionHandler: () => _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation),
+        )
+        .wrapWidgetWithPadding(SBPaddings.padding1),
         floatingActionButton: FilterButton(
           onPressHandler: () => showModalBottomSheet(
             context: context,
