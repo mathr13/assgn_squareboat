@@ -92,3 +92,15 @@ extension ListUtilities on List<String> {
   }
 
 }
+
+extension IntegerUtilities on int {
+
+  List<int> indexed() {
+    List<int> result = [];
+    for(int i=0;i<this;i++) {
+      result.add(i+1);
+    }
+    return result;
+  }
+
+}

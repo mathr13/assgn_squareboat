@@ -4,7 +4,6 @@ import 'package:assgn_news_squareboat/models/news_response.dart';
 import 'package:assgn_news_squareboat/models/source_response.dart';
 import 'package:assgn_news_squareboat/repositories/news_repository.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:simple_connection_checker/simple_connection_checker.dart';
 
@@ -30,15 +29,18 @@ class NewsController extends GetxController {
   List<Article> newsArticlesList = [];
   List<Article> filteredNewsArticlesList = [];
 
-  var selectedSortingAttribute = "";
-  var selectedLocation = "";
-
+  String selectedSortingAttribute = "";
+  String selectedLocation = "";
+  List<String> selectedFilters = [];
   var networkState = NetworkState.ideal.obs;
+  int currentPageIndex = 1;
+  int maxPageIndex = 1;
+  final int pageCapacity = 20;
 
   late final String confidentialApiKey;
 
   loadApiKey() async {
-    confidentialApiKey = await rootBundle.loadString(SBAssets.apiKey1);
+    confidentialApiKey = SBAssets.apiKey1;
   }
 
   populateNews() async {
@@ -48,10 +50,8 @@ class NewsController extends GetxController {
     fetchAllNewsArticlesWithConstraints(location: country);
   }
 
-  bool isLocationValidated() => selectedLocation != "";
-
   Future<void> fetchAllNewsArticlesWithConstraints({String? location, String? searchQuery, List<DateTime>? dateRange, String? sortBy, String? category, List<String>? sources, String? domains}) async {
-    if(!isLocationValidated()) {
+    if(!isLocationValidated) {
       networkState.value = NetworkState.nolocation;
       SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.errorfetchinglocation);
       return;
@@ -62,7 +62,7 @@ class NewsController extends GetxController {
       SBSnackbars.errorSnackbar(SBDisplayLabels.error, SBDisplayLabels.nointernetconnection);
       return;
     }
-    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(confidentialApiKey, country: location, sources: sources?.commaSeperated(), sortBy: sortBy);
+    Either<Failure, NewsResponse> response = await getIt.get<NewsRepository>().getTopHeadlines(confidentialApiKey, country: location, sources: sources?.commaSeperated(), sortBy: selectedSortingAttribute, pageSize: pageCapacity, page: currentPageIndex);
     response.fold(
       (l) {
         newsArticlesList = [];
@@ -71,6 +71,7 @@ class NewsController extends GetxController {
       },
       (r) {
         newsArticlesList = r.articles ?? [];
+        maxPageIndex = getTotalPaginationCountFor(r.totalResults ?? newsArticlesList.length);
         if (location != null) populateSourcesList(location);
         networkState.value = NetworkState.succeeded;
       }
@@ -116,8 +117,21 @@ class NewsController extends GetxController {
     networkState.value = status ? state : NetworkState.noconnection;
   }
 
+  int getTotalPaginationCountFor(int totalResults) {
+    int count = (totalResults/pageCapacity).floor();
+    if(totalResults%pageCapacity > 0) count++;
+    return count;
+  }
+
   initialiseFilters() => _isSourceSelectionActive = false;
 
   setSourceSelectionTo(bool isActive) => _isSourceSelectionActive = isActive;
 
+  bool get isLocationValidated => selectedLocation != "";
+
+  resetPagination() => currentPageIndex = 1;
+
+  resetSources() => selectedFilters = [];
+
+  setCurrentPageIndexTo(int index) => currentPageIndex = index;
 }

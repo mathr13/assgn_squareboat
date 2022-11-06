@@ -9,6 +9,7 @@ import '../../constants/widgets/sbmodal_sheet.dart';
 import '../../navigation/navigation_values.dart';
 import '../../services/navigation_helper.dart';
 import 'article_card.dart';
+import 'pagination_indexing.dart';
 import 'search_bar.dart';
 import 'title_layer.dart';
 
@@ -87,9 +88,9 @@ class _NewsHomeAppState extends State<NewsHomeApp> with ViewUtilities {
                       optionsTally: _newsController.locationsTally,
                       selectionType: SelectionType.oneToOne,
                       optionalCompetionHandler: (selectedValues) {
-                        _newsController.locationsTally.forEach((key, value) {
-                          if(value) _newsController.selectedLocation = key;
-                        });
+                        _newsController.selectedLocation = selectedValues.first;
+                        _newsController.resetSources();
+                        _newsController.resetPagination();
                         _newsController.fetchAllNewsArticlesWithConstraints(location: selectedValues.first);
                       },
                     ),
@@ -119,10 +120,13 @@ class _NewsHomeAppState extends State<NewsHomeApp> with ViewUtilities {
                     optionsTally: _newsController.sortTally,
                     selectionType: SelectionType.oneToOne,
                     optionalCompetionHandler: (selectedValues) {
-                      _newsController.sortTally.forEach((key, value) {
-                        if(value) _newsController.selectedSortingAttribute = key;
-                      });
-                      _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation, sortBy: selectedValues.first);
+                      _newsController.selectedSortingAttribute = selectedValues.first;
+                      _newsController.resetPagination();
+                      if(_newsController.selectedFilters.isNotEmpty) {
+                        _newsController.fetchAllNewsArticlesWithConstraints(sources: _newsController.selectedFilters, sortBy: selectedValues.first);
+                      }else {
+                        _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation, sortBy: selectedValues.first);
+                      }
                     },
                   ),
                 );
@@ -134,7 +138,9 @@ class _NewsHomeAppState extends State<NewsHomeApp> with ViewUtilities {
                   (article) => ArticleCard(article: article,).wrapWidgetWithTapGesture(
                     onPressed: () => Get.toNamed(Routes.articleDetails, arguments: GetArguements(article: article)),
                   )
-                ).toList(),
+                ).toList() + [
+                  const PaginationIndexing(),
+                ],
               )
             ),
           ]
@@ -142,9 +148,8 @@ class _NewsHomeAppState extends State<NewsHomeApp> with ViewUtilities {
         .handleForResults(_newsController.newsArticlesList.isEmpty)
         .handleForNetworkError(
           _newsController.networkState.value,
-          completionHandler: () => _newsController.fetchAllNewsArticlesWithConstraints(location: _newsController.selectedLocation),
-        )
-        .wrapWidgetWithPadding(SBPaddings.padding1),
+          completionHandler: () => _newsController.populateNews(),
+        ).wrapWidgetWithPadding(SBPaddings.padding1),
         floatingActionButton: FilterButton(
           onPressHandler: () => showModalBottomSheet(
             context: context,
@@ -157,6 +162,8 @@ class _NewsHomeAppState extends State<NewsHomeApp> with ViewUtilities {
               selectionType: SelectionType.oneToMany,
               optionalCompetionHandler: (selectedValues) {
                 _newsController.setSourceSelectionTo(selectedValues.isNotEmpty);
+                _newsController.selectedFilters = selectedValues;
+                _newsController.resetPagination();
                 if(selectedValues.isNotEmpty) {
                 _newsController.fetchAllNewsArticlesWithConstraints(sources: selectedValues);
                 }else {
