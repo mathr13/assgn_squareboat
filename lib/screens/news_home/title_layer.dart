@@ -1,8 +1,9 @@
+import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/constant_values.dart';
 
-class TitleLayer extends StatelessWidget {
+class TitleLayer extends StatelessWidget with ViewUtilities {
 
   final String sortingAttribute;
 
@@ -24,7 +25,7 @@ class TitleLayer extends StatelessWidget {
               style: SBTextStyles.content4,
             ),
             Text(
-              sortingAttribute,
+              getDisplayLabelFor(sortingAttribute),
               style: SBTextStyles.content3,
             ),
             const Icon(
