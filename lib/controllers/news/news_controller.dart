@@ -38,7 +38,7 @@ class NewsController extends GetxController {
   late final String confidentialApiKey;
 
   loadApiKey() async {
-    confidentialApiKey = await rootBundle.loadString(SBAssets.apiKey2);
+    confidentialApiKey = await rootBundle.loadString(SBAssets.apiKey1);
   }
 
   populateNews() async {

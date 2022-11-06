@@ -69,7 +69,7 @@ class _NewsHomeAppState extends State<NewsHomeApp> with ViewUtilities {
                         width: 6,
                       ),
                       Text(
-                        _newsController.selectedLocation,
+                        getDisplayLabelFor(_newsController.selectedLocation),
                         style: SBTextStyles.titleLight3,
                       ),
                     ],

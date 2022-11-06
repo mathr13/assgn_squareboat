@@ -20,7 +20,7 @@ class SBModalSheet extends StatefulWidget {
   State<StatefulWidget> createState() => _SBModalSheetState();
 }
 
-class _SBModalSheetState extends State<SBModalSheet> {
+class _SBModalSheetState extends State<SBModalSheet> with ViewUtilities {
 
   final SBModalSheetController _sheetController = SBModalSheetController();
 
@@ -66,13 +66,13 @@ class _SBModalSheetState extends State<SBModalSheet> {
                   itemBuilder: (context, index) {
                     return widget.selectionType == SelectionType.oneToMany
                     ? SBCheckboxOption(
-                        optionTitle: _sheetController.getOptions[index],
+                        optionTitle: getDisplayLabelFor(_sheetController.getOptions[index]),
                         isSelected: _sheetController.getOptionsStatus[index]
                       ).wrapWidgetWithTapGesture(
                       onPressed: () => setModalSheetState(() => _sheetController.triggerSelectionWith(index, widget.selectionType)),
                     )
                     : SBRadioOption(
-                        optionTitle: _sheetController.getOptions[index],
+                        optionTitle: getDisplayLabelFor(_sheetController.getOptions[index]),
                         isSelected: _sheetController.getOptionsStatus[index]
                     ).wrapWidgetWithTapGesture(
                       onPressed: () => setModalSheetState(() => _sheetController.triggerSelectionWith(index, widget.selectionType)),
