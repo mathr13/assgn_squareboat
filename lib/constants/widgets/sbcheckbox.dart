@@ -12,21 +12,24 @@ class SBCheckboxOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          optionTitle,
-          style: TextStyle(
-            fontSize: 16,
+    return Container(
+      color: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            optionTitle,
+            style: TextStyle(
+              fontSize: 16,
+              color: isSelected ? SBColours.primaryBckgLight : const Color(0xff5A6580),
+            ),
+          ),
+          Icon(
+            isSelected ? Icons.check_box_outlined : Icons.check_box_outline_blank,
             color: isSelected ? SBColours.primaryBckgLight : const Color(0xff5A6580),
           ),
-        ),
-        Icon(
-          isSelected ? Icons.check_box_outlined : Icons.check_box_outline_blank,
-          color: isSelected ? SBColours.primaryBckgLight : const Color(0xff5A6580),
-        ),
-      ],
-    ).wrapWidgetWithPadding(SBPaddings.verticalPadding3).wrapWidgetWithPadding(SBPaddings.horizontalPadding1);
+        ],
+      ).wrapWidgetWithPadding(SBPaddings.verticalPadding3).wrapWidgetWithPadding(SBPaddings.horizontalPadding1),
+    );
   }
 }

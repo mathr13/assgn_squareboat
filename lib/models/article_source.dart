@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'article_source.g.dart';
+
+@JsonSerializable()
 class Source {
   String? id;
   String? name;
@@ -7,34 +12,9 @@ class Source {
   String? language;
   String? country;
 
-  Source(
-      {this.id,
-      this.name,
-      this.description,
-      this.url,
-      this.category,
-      this.language,
-      this.country});
+  Source({this.id, this.name, this.description, this.url, this.category, this.language, this.country});
 
-  Source.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    description = json['description'];
-    url = json['url'];
-    category = json['category'];
-    language = json['language'];
-    country = json['country'];
-  }
+  factory Source.fromJson(Map<String, dynamic> json) => _$SourceFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['id'] = id;
-    data['name'] = name;
-    data['description'] = description;
-    data['url'] = url;
-    data['category'] = category;
-    data['language'] = language;
-    data['country'] = country;
-    return data;
-  }
+  Map<String, dynamic> toJson() => _$SourceToJson(this);
 }

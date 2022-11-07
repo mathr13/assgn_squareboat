@@ -20,7 +20,7 @@ class SBModalSheet extends StatefulWidget {
   State<StatefulWidget> createState() => _SBModalSheetState();
 }
 
-class _SBModalSheetState extends State<SBModalSheet> {
+class _SBModalSheetState extends State<SBModalSheet> with ViewUtilities {
 
   final SBModalSheetController _sheetController = SBModalSheetController();
 
@@ -59,23 +59,23 @@ class _SBModalSheetState extends State<SBModalSheet> {
             color: Color(0xff5A6580),
           ).wrapWidgetWithPadding(SBPaddings.horizontalPadding1).wrapWidgetWithPadding(SBPaddings.bottomPadding3),
           StatefulBuilder(
-            builder: (context, updateModalSheetState) {
+            builder: (context, setModalSheetState) {
               return Expanded(
                 child: ListView.builder(
                   itemCount: _sheetController.getOptions.length,
                   itemBuilder: (context, index) {
                     return widget.selectionType == SelectionType.oneToMany
                     ? SBCheckboxOption(
-                        optionTitle: _sheetController.getOptions[index],
+                        optionTitle: getDisplayLabelFor(_sheetController.getOptions[index]),
                         isSelected: _sheetController.getOptionsStatus[index]
                       ).wrapWidgetWithTapGesture(
-                      onPressed: () => updateModalSheetState(() => _sheetController.triggerSelectionWith(index, widget.selectionType)),
+                      onPressed: () => setModalSheetState(() => _sheetController.triggerSelectionWith(index, widget.selectionType)),
                     )
                     : SBRadioOption(
-                        optionTitle: _sheetController.getOptions[index],
+                        optionTitle: getDisplayLabelFor(_sheetController.getOptions[index]),
                         isSelected: _sheetController.getOptionsStatus[index]
                     ).wrapWidgetWithTapGesture(
-                      onPressed: () => updateModalSheetState(() => _sheetController.triggerSelectionWith(index, widget.selectionType)),
+                      onPressed: () => setModalSheetState(() => _sheetController.triggerSelectionWith(index, widget.selectionType)),
                     );
                   },
                 ),

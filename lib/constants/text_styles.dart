@@ -76,4 +76,10 @@ abstract class SBTextStyles {
     fontWeight: FontWeight.w700
   );
 
+  static const pageIndex = TextStyle(
+    fontSize: 14,
+    color: SBColours.primaryTextDark,
+    fontWeight: FontWeight.w700
+  );
+
 }

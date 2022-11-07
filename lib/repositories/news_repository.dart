@@ -7,7 +7,7 @@ import '../services/news_rest_client.dart';
 
 abstract class NewsRepository {
 
-  Future<Either<Failure, NewsResponse>> getTopHeadlines(String apiKey, {String? country, String? query, String? sources, String? category, String? sortBy, String? pageSize, String? page});
+  Future<Either<Failure, NewsResponse>> getTopHeadlines(String apiKey, {String? country, String? query, String? sources, String? category, String? sortBy, int? pageSize, int? page});
   Future<Either<Failure, SourcesResponse>> getAllSourcesForRegion(String apiKey, String country);
   Future<Either<Failure, NewsResponse>> getEverythingFor(String apiKey, {String? country, required String query, String? sources, String? from, String? to, String? sortBy, String? pageSize, String? page});
 
@@ -20,9 +20,9 @@ class NewsRepositoryImpl implements NewsRepository {
   NewsRepositoryImpl(this.client);
   
   @override
-  Future<Either<Failure, NewsResponse>> getTopHeadlines(String apiKey, {String? country, String? query, String? sources, String? category, String? sortBy, String? pageSize, String? page}) async {
+  Future<Either<Failure, NewsResponse>> getTopHeadlines(String apiKey, {String? country, String? query, String? sources, String? category, String? sortBy, int? pageSize, int? page}) async {
     try {
-      var response = await client.fetchHeadlines(apiKey, sources: sources, country: country, sortBy: sortBy);
+      var response = await client.fetchHeadlines(apiKey, sources: sources, country: country, sortBy: sortBy, page: page, pageSize: pageSize);
       return Right(response);
     } catch (e) {
       return Left(Failure.fromServerError(e));

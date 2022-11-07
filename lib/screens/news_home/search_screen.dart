@@ -1,9 +1,10 @@
+import 'package:assgn_news_squareboat/controllers/news/search_handler.dart';
 import 'package:assgn_news_squareboat/utilities/utility_values.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../constants/constant_values.dart';
-import '../../controllers/news_controller.dart';
+import '../../controllers/news/news_controller.dart';
 import '../../navigation/navigation_values.dart';
 import '../../services/navigation_helper.dart';
 import 'article_card.dart';
@@ -18,7 +19,7 @@ class SearchScreen extends StatefulWidget {
   }
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends State<SearchScreen> with ViewUtilities {
 
   final NewsController _newsController = Get.find<NewsController>();
 
@@ -57,7 +58,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     onPressed: () => Get.toNamed(Routes.articleDetails, arguments: GetArguements(article: article)),
                   )
                 ).toList(),
-              ).withProgressIndicator(_newsController.showProgressIndicator.value),
+              ).withProgressIndicator(getProgressIndicatorStatusFor(_newsController.networkState.value)),
             )
           ),
         ],

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../constants/constant_values.dart';
-import '../../controllers/news_controller.dart';
 
 class SBSearchBar extends StatelessWidget {
   
