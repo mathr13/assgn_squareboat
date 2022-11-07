@@ -40,7 +40,7 @@ class NewsController extends GetxController {
   late final String confidentialApiKey;
 
   loadApiKey() async {
-    confidentialApiKey = SBAssets.apiKey1;
+    confidentialApiKey = SBAssets.apiKey2;
   }
 
   populateNews() async {
